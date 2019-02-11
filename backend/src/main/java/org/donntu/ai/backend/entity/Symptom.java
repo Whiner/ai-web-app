@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -28,4 +29,22 @@ public class Symptom {
             mappedBy = "symptoms")
     private Set<Diagnosis> diagnoses = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Symptom symptom = (Symptom) o;
+
+        return Objects.equals(name.toLowerCase().trim(), symptom.name.toLowerCase().trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
+    }
 }
