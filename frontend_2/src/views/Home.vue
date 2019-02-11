@@ -1,18 +1,23 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <span>{{ msg }}</span>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+  import test from '../client/test';
 
-export default {
-  name: 'home',
-  components: {
-    HelloWorld,
-  },
-};
+  export default {
+        name: 'Home',
+        components: {
+        },
+        data() {
+            return {
+                msg: {
+                    type: String,
+                },
+            };
+        },
+        async created() {
+            this.msg = await test();
+        },
+    };
 </script>
