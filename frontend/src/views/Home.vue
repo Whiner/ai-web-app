@@ -3,9 +3,9 @@
 </template>
 
 <script>
-  import test from '../client/test';
+    import test from '../client/test';
 
-  export default {
+    export default {
         name: 'Home',
         components: {},
         data() {
