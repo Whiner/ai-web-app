@@ -13,6 +13,5 @@ Vue.use(Vuetify);
 new Vue({
   el: '#app',
   router,
-  components: { Home },
-  template: '<Home/>',
+  render: h => h(Home),
 });
