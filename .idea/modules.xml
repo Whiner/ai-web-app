@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ai.iml" filepath="$PROJECT_DIR$/.idea/modules/ai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ai_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ai_main.iml" group="ai" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ai_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ai_test.iml" group="ai" />
       <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" group="ai" />
-      <module fileurl="file://$PROJECT_DIR$/frontend/frontend.iml" filepath="$PROJECT_DIR$/frontend/frontend.iml" group="ai" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.iml" filepath="$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/org.donntu.ai.backend.test.iml" />
     </modules>
   </component>
 </project>
