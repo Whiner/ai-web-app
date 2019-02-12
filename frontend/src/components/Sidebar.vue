@@ -4,22 +4,30 @@
             fixed
             floating
             dark
-            width="250"
+            :mini-variant.sync="mini"
+            width="300"
     >
-        <v-list>
-            <v-list-tile
-                    v-for="item in items"
-                    :key="item.title"
-            >
-                <v-list-tile-action>
-                    <v-icon>{{ item.icon }}</v-icon>
-                </v-list-tile-action>
+        <v-layout column
+                  fill-height
+                  justify-center
+                  @mouseenter="mini = false"
+                  @mouseleave="mini = true"
+        >
+            <v-list>
+                <v-list-tile
+                        v-for="item in items"
+                        :key="item.title"
+                >
+                    <v-list-tile-action>
+                        <font-awesome-icon :icon="item.icon" class="fa-lg" />
+                    </v-list-tile-action>
 
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-        </v-list>
+                    <v-list-tile-content>
+                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+        </v-layout>
     </v-navigation-drawer>
 </template>
 
@@ -31,16 +39,16 @@
                 mini: true,
                 items: [
                     {
-                        title: 'Dashboard',
-                        icon: 'dashboard',
+                        title: 'Узнать диагноз',
+                        icon: 'ambulance', //тут вопрос
                     },
                     {
-                        title: 'Account',
-                        icon: 'account_box',
+                        title: 'Угадать животное',
+                        icon: 'cat',
                     },
                     {
-                        title: 'Admin',
-                        icon: 'gavel',
+                        title: 'Найти экстремум',
+                        icon: 'chart-area',
                     },
                 ],
             };
