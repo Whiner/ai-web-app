@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -29,4 +30,18 @@ public class Diagnosis {
             joinColumns = {@JoinColumn(name = "diagnoses_id")},
             inverseJoinColumns = {@JoinColumn(name = "symptoms_id")})
     private Set<Symptom> symptoms = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Diagnosis diagnosis = (Diagnosis) o;
+        return Objects.equals(id, diagnosis.id) &&
+                name.toLowerCase().trim().equals(diagnosis.name.toLowerCase().trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

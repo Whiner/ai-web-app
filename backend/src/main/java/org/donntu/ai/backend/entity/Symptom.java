@@ -40,7 +40,8 @@ public class Symptom {
 
         final Symptom symptom = (Symptom) o;
 
-        return Objects.equals(name.toLowerCase().trim(), symptom.name.toLowerCase().trim());
+        return Objects.equals(name.toLowerCase().trim(), symptom.name.toLowerCase().trim())
+                && Objects.equals(id, symptom.id);
     }
 
     @Override
