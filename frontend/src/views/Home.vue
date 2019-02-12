@@ -1,22 +1,19 @@
 <template>
-    <span>{{ msg }}</span>
+    <Sidebar />
 </template>
 
 <script>
-    import test from '../client/test';
 
-    export default {
+  import Sidebar from '../components/Sidebar.vue';
+
+  export default {
         name: 'Home',
-        components: {},
-        data() {
-            return {
-                msg: {
-                    type: String,
-                },
-            };
-        },
-        async created() {
-            this.msg = await test();
-        },
+        components: { Sidebar },
+
+
     };
 </script>
+
+<style lang="stylus">
+
+</style>
