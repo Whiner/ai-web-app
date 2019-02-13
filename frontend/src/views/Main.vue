@@ -1,11 +1,11 @@
 <template>
     <div>
         <Sidebar />
-        <transition name="component-fade" mode="out-in">
-            <v-content>
+        <v-content>
+            <transition name="component-fade" mode="out-in">
                 <router-view />
-            </v-content>
-        </transition>
+            </transition>
+        </v-content>
     </div>
 </template>
 
@@ -22,5 +22,12 @@
 <style lang="stylus">
   body {
     font-family 'Roboto', sans-serif
+  }
+
+  .component-fade-enter-active, .component-fade-leave-active {
+    transition: opacity .3s ease;
+  }
+  .component-fade-enter, .component-fade-leave-to {
+    opacity: 0;
   }
 </style>

@@ -14,31 +14,20 @@
             </v-container>
         </v-card-title>
         <v-card-text class="card-content">
-            <v-layout v-for="symptom in symptoms"
-                      :key="symptom.id"
-                      row
-            >
-                <v-flex>
-                    <v-checkbox
-                            v-model="symptom.checked"
-                            color="primary"
-                            hide-details
-                            :label="symptom.name"
-                    />
-                </v-flex>
-            </v-layout>
-        </v-card-text>
-        <v-card-actions>
             <v-container fluid>
-                <v-layout row>
-                    <v-flex xs2>
-                        <v-btn color="primary">
-                            Узнать диагноз
-                        </v-btn>
+                <v-layout row justify-center>
+                    <v-flex>
+                        <p class="text-xs-center diagnosis">
+                            {{ diagnosis.name }}
+                        </p>
                     </v-flex>
                 </v-layout>
+                <v-layout row justify-center>
+                    <img src="../assets/diagnosis.png" alt="Диагноз">
+                </v-layout>
             </v-container>
-        </v-card-actions>
+        </v-card-text>
+        <v-card-actions />
     </v-card>
 </template>
 
@@ -67,5 +56,9 @@
     padding-top 0
     padding-left 30px
     padding-right 30px
+  }
+
+  .diagnosis {
+    font-size 1.4rem
   }
 </style>

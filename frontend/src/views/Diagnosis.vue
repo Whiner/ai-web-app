@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <v-layout row>
+        <v-layout v-if="false" row>
             <v-flex>
                 <v-card>
                     <v-card-text py-2>
@@ -8,16 +8,19 @@
                                 class="ma-1"
                                 value
                                 hide-details
-                                label="Использовать коэфицент доверия?"
+                                label="Использовать коэфиценты доверия?"
                                 color="primary"
                         />
                     </v-card-text>
                 </v-card>
             </v-flex>
         </v-layout>
-        <v-layout row mt-3 justify-center>
-            <v-flex xs6>
+        <v-layout row mt-3>
+            <v-flex xs6 mr-3>
                 <SymptomsChoice :symptoms="symptoms" />
+            </v-flex>
+            <v-flex v-if="diagnosis" xs6 ml-3>
+                <DiagnosisResult :diagnosis="diagnosis" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -25,12 +28,17 @@
 
 <script>
     import SymptomsChoice from '../components/SymptomsChoice.vue';
+    import DiagnosisResult from '../components/DiagnosisResult.vue';
 
     export default {
         name: 'Diagnosis',
-        components: { SymptomsChoice },
+        components: { DiagnosisResult, SymptomsChoice },
         data() {
             return {
+                diagnosis: {
+                    id: 1,
+                    name: 'Острая хроническая жопная боль',
+                },
                 symptoms: [
                     {
                         id: 1,
