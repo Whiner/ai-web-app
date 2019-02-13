@@ -1,7 +1,9 @@
 <template>
     <v-container fluid>
         <Sidebar />
-        <router-view />
+        <v-content>
+            <router-view />
+        </v-content>
     </v-container>
 </template>
 
@@ -10,13 +12,13 @@
     import Sidebar from '../components/Sidebar.vue';
 
     export default {
-        name: 'Home',
+        name: 'Main',
         components: { Sidebar },
     };
 </script>
 
 <style lang="stylus">
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family 'Roboto', sans-serif
   }
 </style>
