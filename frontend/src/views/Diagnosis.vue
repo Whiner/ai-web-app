@@ -65,6 +65,11 @@
                         name: 'Жишка ша нопе',
                         checked: false,
                     },
+                    {
+                        id: 6,
+                        name: 'Головная боль',
+                        checked: false,
+                    },
                 ],
             };
         },

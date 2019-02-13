@@ -139,4 +139,8 @@
     padding-top 10x
     padding-bottom 10px
   }
+  .v-list {
+    height: 310px;
+    overflow-y: auto;
+  }
 </style>
