@@ -3,9 +3,9 @@
         <v-card-title class="card-title">
             <v-container fluid class="pa-10px">
                 <v-layout row>
-                    <font-awesome-icon icon="stethoscope" class="fa-lg" />
+                    <font-awesome-icon icon="comment-medical" class="fa-lg" />
                     <span class="title font-weight-light ml-3">
-                        Выберите симптомы
+                        Ваш диагноз
                     </span>
                 </v-layout>
                 <v-layout row mt-2>
@@ -44,11 +44,11 @@
 
 <script>
     export default {
-        name: 'SymptomsChoice',
+        name: 'DiagnosisResult',
         props: {
-            symptoms: {
-                type: Array,
-                default: () => [],
+            diagnosis: {
+                type: Object,
+                default: null,
             },
         },
     };

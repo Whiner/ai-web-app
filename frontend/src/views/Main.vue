@@ -1,10 +1,12 @@
 <template>
-    <v-container fluid>
+    <div>
         <Sidebar />
-        <v-content>
-            <router-view />
-        </v-content>
-    </v-container>
+        <transition name="component-fade" mode="out-in">
+            <v-content>
+                <router-view />
+            </v-content>
+        </transition>
+    </div>
 </template>
 
 <script>

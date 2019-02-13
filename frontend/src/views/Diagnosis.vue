@@ -1,14 +1,24 @@
 <template>
     <v-container fluid>
-        <v-layout mt-3 row>
+        <v-layout row>
             <v-flex>
-                <p class="header">
-                    Хочешь узнать что с тобой?
-                </p>
+                <v-card>
+                    <v-card-text py-2>
+                        <v-switch
+                                class="ma-1"
+                                value
+                                hide-details
+                                label="Использовать коэфицент доверия?"
+                                color="primary"
+                        />
+                    </v-card-text>
+                </v-card>
             </v-flex>
         </v-layout>
-        <v-layout row>
-            <SymptomsChoice :symptoms="symptoms" />
+        <v-layout row mt-3 justify-center>
+            <v-flex xs6>
+                <SymptomsChoice :symptoms="symptoms" />
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -29,22 +39,22 @@
                     },
                     {
                         id: 2,
-                        name: 'Шишка на жопе',
+                        name: 'Жопа на шишке',
                         checked: false,
                     },
                     {
                         id: 3,
-                        name: 'Шишка на жопе',
+                        name: 'Жишка на шопе',
                         checked: false,
                     },
                     {
                         id: 4,
-                        name: 'Шишка на жопе',
+                        name: 'Нишка жа шопе',
                         checked: false,
                     },
                     {
                         id: 5,
-                        name: 'Шишка на жопе',
+                        name: 'Жишка ша нопе',
                         checked: false,
                     },
                 ],
