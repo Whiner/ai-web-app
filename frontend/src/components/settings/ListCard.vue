@@ -8,16 +8,16 @@
                         {{ title }}
                     </span>
                 </v-layout>
-                <v-layout row mt-2>
-                    <v-divider />
-                </v-layout>
             </v-container>
         </v-card-title>
         <v-card-text class="py-0">
             <v-container fluid class="pt-0 pl-2 pr-0">
+                <v-layout row mt-2>
+                    <v-divider />
+                </v-layout>
                 <v-layout row>
                     <v-flex>
-                        <v-list>
+                        <v-list class="grey lighten-4">
                             <v-list-tile
                                     v-for="item in items"
                                     :key="item.id"
@@ -142,5 +142,8 @@
   .v-list {
     height: 310px;
     overflow-y: auto;
+  }
+  .list-layout{
+    background-color #b4b4b4
   }
 </style>

@@ -21,8 +21,9 @@
                 <v-flex>
                     <v-checkbox
                             v-model="symptom.checked"
-                            color="primary"
+                            class="dark-color"
                             hide-details
+                            color="secondary"
                             :label="symptom.name"
                     />
                 </v-flex>
@@ -32,7 +33,7 @@
             <v-container fluid>
                 <v-layout row>
                     <v-flex xs2>
-                        <v-btn color="primary">
+                        <v-btn color="secondary">
                             Узнать диагноз
                         </v-btn>
                     </v-flex>
@@ -67,5 +68,9 @@
     padding-top 0
     padding-left 30px
     padding-right 30px
+  }
+
+  .theme--light >>> .v-label {
+    color var(--secondary-base)
   }
 </style>

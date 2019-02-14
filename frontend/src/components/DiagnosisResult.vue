@@ -18,7 +18,7 @@
                 <v-layout row justify-center>
                     <v-flex>
                         <p class="text-xs-center diagnosis">
-                            {{ diagnosis.name }}
+                            Возможно, это - {{ diagnosis.name }}
                         </p>
                     </v-flex>
                 </v-layout>

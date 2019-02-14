@@ -48,4 +48,8 @@ public class Symptom {
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
     }
+
+    public Symptom(String name) {
+        this.name = name;
+    }
 }

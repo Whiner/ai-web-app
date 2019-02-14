@@ -1,9 +1,15 @@
 <template>
-    <ListCard :items="symptoms" title="Список симптомов" text-field-label="Введите симптом" />
+    <ListCard
+            :items="symptoms"
+            title="Список симптомов"
+            text-field-label="Введите симптом"
+            @save="addSymptom"
+    />
 </template>
 
 <script>
     import ListCard from './ListCard.vue';
+    import { addNewSymptom } from '../../client/diagnoses';
 
     export default {
         name: 'SymptomsSettings',
@@ -33,6 +39,11 @@
                     },
                 ],
             };
+        },
+        methods: {
+            async addSymptom(name) {
+                await addNewSymptom(name);
+            },
         },
     };
 </script>

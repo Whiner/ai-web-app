@@ -44,4 +44,9 @@ public class Diagnosis {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    public Diagnosis(String name, Set<Symptom> symptoms) {
+        this.name = name;
+        this.symptoms = symptoms;
+    }
 }

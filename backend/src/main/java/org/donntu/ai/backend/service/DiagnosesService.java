@@ -146,13 +146,13 @@ public class DiagnosesService {
         }
     }
 
-    public boolean deleteDiagnosis(Long id) throws Exception {
+    public boolean deleteDiagnosis(Long id) {
         Optional<Diagnosis> byId = getDiagnosisById(id);
         if (byId.isPresent()) {
             diagnosesRepository.delete(byId.get());
             return diagnoses.remove(byId.get());
         } else {
-            throw new Exception("Такого диагноза не существует");
+            return false;
         }
     }
 
@@ -168,5 +168,9 @@ public class DiagnosesService {
                 .stream()
                 .filter(symptom -> symptom.getId().equals(id))
                 .findFirst();
+    }
+
+    public Set<Symptom> getAllSymptoms() {
+        return symptoms;
     }
 }
