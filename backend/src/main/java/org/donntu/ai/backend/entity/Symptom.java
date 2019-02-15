@@ -1,5 +1,6 @@
 package org.donntu.ai.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Symptom {
                     CascadeType.MERGE
             },
             mappedBy = "symptoms")
+    @JsonIgnore
     private Set<Diagnosis> diagnoses = new HashSet<>();
 
     @Override
