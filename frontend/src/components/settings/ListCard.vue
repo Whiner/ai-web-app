@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title class="pb-0">
+        <v-card-title class="pb-0 pt-0">
             <v-container fluid class="pa-10px pb-0">
                 <v-layout row>
                     <font-awesome-icon icon="ambulance" class="fa-lg" />
@@ -124,9 +124,10 @@
             save() {
                 if (this.name && this.name.length > 0) {
                     if (this.editingItem === null) {
-                        this.$emit('save', this.name);
+                        this.$emit('save-new', this.name);
                     } else {
-                        this.$emit('save', this.editingItem.id, this.editingItem.name);
+                        this.$emit('save-old', this.editingItem);
+                        this.editingItem = null;
                     }
                 }
             },
@@ -139,11 +140,13 @@
     padding-top 10x
     padding-bottom 10px
   }
+
   .v-list {
     height: 310px;
     overflow-y: auto;
   }
-  .list-layout{
+
+  .list-layout {
     background-color #b4b4b4
   }
 </style>

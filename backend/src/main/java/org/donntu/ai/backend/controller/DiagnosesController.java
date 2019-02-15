@@ -18,7 +18,7 @@ public class DiagnosesController {
     }
 
     @PostMapping("/diagnoses-by-symptoms")
-    public DiagnosisBySymptomsResponse getDiagnosesBySymptoms(@RequestBody DiagnosisBySymptomsRequest request){
+    public DiagnosesListResponse getDiagnosesBySymptoms(@RequestBody DiagnosesBySymptomsRequest request){
         return diagnosesService.getDiagnosesBySymptoms(request.getSymptoms());
     }
 
@@ -51,4 +51,10 @@ public class DiagnosesController {
     public boolean addSymptom(@RequestParam String name) {
         return diagnosesService.addSymptom(new Symptom(name));
     }
+
+    @GetMapping("/all")
+    public DiagnosesListResponse getAllDiagnoses() {
+        return new DiagnosesListResponse(diagnosesService.getAllDiagnoses());
+    }
+
 }

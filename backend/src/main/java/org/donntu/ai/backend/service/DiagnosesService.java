@@ -1,6 +1,6 @@
 package org.donntu.ai.backend.service;
 
-import org.donntu.ai.backend.dto.DiagnosisBySymptomsResponse;
+import org.donntu.ai.backend.dto.DiagnosesListResponse;
 import org.donntu.ai.backend.entity.Diagnosis;
 import org.donntu.ai.backend.entity.Symptom;
 import org.donntu.ai.backend.repository.DiagnosesRepository;
@@ -31,14 +31,14 @@ public class DiagnosesService {
         symptoms.addAll(SetsUtils.iterableToSet(symptomsRepository.findAll()));
     }
 
-    public DiagnosisBySymptomsResponse getDiagnosesBySymptoms(Set<Symptom> symptoms) {
+    public DiagnosesListResponse getDiagnosesBySymptoms(Set<Symptom> symptoms) {
         Set<Diagnosis> diagnosesList = new HashSet<>();
         diagnoses.forEach(diagnosis -> {
             if (isDiagnosisContainsAllSymptoms(diagnosis, symptoms)) {
                 diagnosesList.add(diagnosis);
             }
         });
-        return new DiagnosisBySymptomsResponse(diagnosesList);
+        return new DiagnosesListResponse(diagnosesList);
     }
 
     private boolean isDiagnosisContainsAllSymptoms(Diagnosis diagnosis, Set<Symptom> symptoms) {
@@ -172,5 +172,9 @@ public class DiagnosesService {
 
     public Set<Symptom> getAllSymptoms() {
         return symptoms;
+    }
+
+    public Set<Diagnosis> getAllDiagnoses() {
+        return diagnoses;
     }
 }

@@ -10,6 +10,6 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiagnosisBySymptomsResponse {
+public class DiagnosesListResponse {
     private Set<Diagnosis> diagnoses;
 }

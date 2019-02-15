@@ -14,31 +14,11 @@
     export default {
         name: 'SymptomsSettings',
         components: { ListCard },
-        data() {
-            return {
-                symptoms: [
-                    {
-                        id: 1,
-                        name: 'Шишка на жопе',
-                    },
-                    {
-                        id: 2,
-                        name: 'Жопа на шишке',
-                    },
-                    {
-                        id: 3,
-                        name: 'Жишка на шопе',
-                    },
-                    {
-                        id: 4,
-                        name: 'Нишка жа шопе',
-                    },
-                    {
-                        id: 5,
-                        name: 'Жишка ша нопе',
-                    },
-                ],
-            };
+        props: {
+            symptoms: {
+                type: Array,
+                default: null,
+            },
         },
         methods: {
             async addSymptom(name) {
