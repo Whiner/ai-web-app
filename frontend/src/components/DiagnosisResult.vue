@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="fill-height">
         <v-card-title class="card-title">
             <v-container fluid class="pa-10px">
                 <v-layout row>
@@ -14,16 +14,39 @@
             </v-container>
         </v-card-title>
         <v-card-text class="card-content">
-            <v-container fluid>
+            <v-container v-if="diagnoses.length > 0" fluid>
                 <v-layout row justify-center>
                     <v-flex>
                         <p class="text-xs-center diagnosis">
-                            Возможно, это - {{ diagnosis.name }}
+                            Возможно, это -
+                            <span v-for="(diagnosis, index) in diagnoses" :key="diagnosis.id">
+                                {{ diagnosis.name }}
+                                <span v-if="index !== diagnoses.length - 1">
+                                    или
+                                </span>
+                            </span>
                         </p>
                     </v-flex>
                 </v-layout>
                 <v-layout row justify-center>
                     <img src="../assets/diagnosis.png" alt="Диагноз">
+                </v-layout>
+            </v-container>
+            <v-container v-else fluid>
+                <v-layout row>
+                    <v-flex>
+                        <p class="text-xs-center diagnosis">
+                            К сожалению, ваш диагноз неизвестен.
+                            Если нагуглите - добавьте его в пункте настроек.
+                        </p>
+                    </v-flex>
+                </v-layout>
+                <v-layout row justify-center>
+                    <v-flex xs8>
+                        <v-btn outline to="settings" block>
+                            Перейти в настройки
+                        </v-btn>
+                    </v-flex>
                 </v-layout>
             </v-container>
         </v-card-text>
@@ -35,9 +58,9 @@
     export default {
         name: 'DiagnosisResult',
         props: {
-            diagnosis: {
-                type: Object,
-                default: null,
+            diagnoses: {
+                type: Array,
+                default: () => [],
             },
         },
     };

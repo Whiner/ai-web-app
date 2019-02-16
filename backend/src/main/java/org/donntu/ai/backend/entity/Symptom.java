@@ -22,10 +22,9 @@ public class Symptom {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.ALL,
             },
             mappedBy = "symptoms")
     @JsonIgnore
@@ -53,5 +52,12 @@ public class Symptom {
 
     public Symptom(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Symptom{" +
+                "id=" + id +
+                ", name='" + name + "'";
     }
 }

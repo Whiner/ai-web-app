@@ -23,8 +23,7 @@ public class Diagnosis {
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.ALL
             })
     @JoinTable(name = "diagnoses_symptoms",
             joinColumns = {@JoinColumn(name = "diagnoses_id")},

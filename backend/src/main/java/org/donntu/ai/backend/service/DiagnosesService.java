@@ -122,6 +122,22 @@ public class DiagnosesService {
         if (isAnyDiagnosisHaveSymptomsInput(diagnosis)) {
             return false;
         } else {
+            Set<Symptom> fromBase = new HashSet<>();
+            diagnosis.getSymptoms().forEach(symptom -> {
+                Optional<Symptom> symptomById = getSymptomById(symptom.getId());
+                symptomById.ifPresent(fromBase::add);
+            });
+
+            diagnosis.setSymptoms(fromBase); //хз че не работает
+
+            diagnosis.getSymptoms()
+                    .forEach(symptom -> {
+                        Set<Diagnosis> diagnoses = symptom.getDiagnoses();
+                        diagnoses.add(diagnosis);
+                        Optional<Symptom> symptomById = getSymptomById(symptom.getId());
+                        symptomById.ifPresent(symptom1 -> diagnoses.addAll(symptom1.getDiagnoses()));
+                    });
+
             Diagnosis saved = diagnosesRepository.save(diagnosis);
             diagnoses.add(saved);
             return true;
@@ -177,4 +193,5 @@ public class DiagnosesService {
     public Set<Diagnosis> getAllDiagnoses() {
         return diagnoses;
     }
+
 }

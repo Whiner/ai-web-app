@@ -17,10 +17,10 @@
         </v-layout>
         <v-layout row mt-3>
             <v-flex xs6 mr-3>
-                <SymptomsChoice :symptoms="symptoms" />
+                <SymptomsChoice :symptoms="symptoms" @check="checkDiagnoses" />
             </v-flex>
-            <v-flex v-if="diagnosis" xs6 ml-3>
-                <DiagnosisResult :diagnosis="diagnosis" />
+            <v-flex v-if="diagnoses" xs6 ml-3>
+                <DiagnosisResult :diagnoses="diagnoses" />
             </v-flex>
         </v-layout>
     </v-container>
@@ -29,49 +29,31 @@
 <script>
     import SymptomsChoice from '../components/SymptomsChoice.vue';
     import DiagnosisResult from '../components/DiagnosisResult.vue';
+    import { getAllSymptoms, getDiagnosesBySymptoms } from '../client/diagnoses';
+    import compareById from '../utils/compareUtil';
 
     export default {
         name: 'Diagnosis',
-        components: { DiagnosisResult, SymptomsChoice },
+        components: {
+            DiagnosisResult,
+            SymptomsChoice,
+        },
         data() {
             return {
-                diagnosis: {
-                    id: 1,
-                    name: 'Острая хроническая жопная боль',
-                },
-                symptoms: [
-                    {
-                        id: 1,
-                        name: 'Шишка на жопе',
-                        checked: false,
-                    },
-                    {
-                        id: 2,
-                        name: 'Жопа на шишке',
-                        checked: false,
-                    },
-                    {
-                        id: 3,
-                        name: 'Жишка на шопе',
-                        checked: false,
-                    },
-                    {
-                        id: 4,
-                        name: 'Нишка жа шопе',
-                        checked: false,
-                    },
-                    {
-                        id: 5,
-                        name: 'Жишка ша нопе',
-                        checked: false,
-                    },
-                    {
-                        id: 6,
-                        name: 'Головная боль',
-                        checked: false,
-                    },
-                ],
+                diagnoses: null,
+                symptoms: null,
             };
+        },
+        async beforeRouteEnter(to, from, next) {
+            const allSymptoms = await getAllSymptoms();
+            next((vm) => {
+                vm.symptoms = allSymptoms.symptoms.sort(compareById);
+            });
+        },
+        methods: {
+            async checkDiagnoses(symptoms) {
+                this.diagnoses = (await getDiagnosesBySymptoms(symptoms)).diagnoses;
+            },
         },
     };
 </script>

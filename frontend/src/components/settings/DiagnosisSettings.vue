@@ -110,7 +110,8 @@
             save() {
                 this.dialog = false;
                 if (this.editingItem) {
-                    this.$emit('save');
+                    this.editingItem.symptoms = this.symptoms.filter(v => v.checked);
+                    this.$emit('save', this.editingItem);
                 }
             },
             cancel() {

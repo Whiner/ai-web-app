@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="fill-height">
         <v-card-title class="card-title">
             <v-container fluid class="pa-10px">
                 <v-layout row>
@@ -8,32 +8,33 @@
                         Выберите симптомы
                     </span>
                 </v-layout>
-                <v-layout row mt-2>
-                    <v-divider />
-                </v-layout>
             </v-container>
         </v-card-title>
-        <v-card-text class="card-content">
-            <v-layout v-for="symptom in symptoms"
-                      :key="symptom.id"
-                      row
-            >
-                <v-flex>
-                    <v-checkbox
-                            v-model="symptom.checked"
-                            class="dark-color"
-                            hide-details
-                            color="secondary"
-                            :label="symptom.name"
-                    />
-                </v-flex>
-            </v-layout>
+        <v-card-text class="py-0">
+            <v-divider />
+            <v-container fluid class="pt-0 pl-3 pr-0 card-content">
+                <v-layout v-for="symptom in symptoms"
+                          :key="symptom.id"
+                          row
+                >
+                    <v-flex>
+                        <v-checkbox
+                                v-model="symptom.checked"
+                                class="dark-color"
+                                hide-details
+                                color="secondary"
+                                :label="symptom.name"
+                        />
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            <v-divider />
         </v-card-text>
         <v-card-actions>
             <v-container fluid>
                 <v-layout row>
                     <v-flex xs2>
-                        <v-btn color="secondary">
+                        <v-btn color="secondary" @click="checkDiagnoses">
                             Узнать диагноз
                         </v-btn>
                     </v-flex>
@@ -44,12 +45,18 @@
 </template>
 
 <script>
+
     export default {
         name: 'SymptomsChoice',
         props: {
             symptoms: {
                 type: Array,
                 default: () => [],
+            },
+        },
+        methods: {
+            checkDiagnoses() {
+                this.$emit('check', this.symptoms.filter(value => value.checked));
             },
         },
     };
@@ -65,9 +72,11 @@
   }
 
   .card-content {
-    padding-top 0
-    padding-left 30px
-    padding-right 30px
+    height: 360px;
+    overflow-y: auto;
+  }
+  .card-text-container{
+    background-color #b4b4b4
   }
 
   .theme--light >>> .v-label {

@@ -20,3 +20,26 @@ export async function addNewSymptom(name) {
     });
     return response.data;
 }
+
+export async function getDiagnosesBySymptoms(symptoms) {
+    const response = await axios.post(
+        `${URL}/diagnoses-by-symptoms`,
+        { symptoms },
+        null,
+    );
+    return response.data;
+}
+
+export async function addNewDiagnosis(item) {
+    const response = await axios.post(`${URL}/add`,
+        {
+            name: item.name,
+            symptoms: item.symptoms,
+        });
+    return response.data;
+}
+
+export async function updateDiagnosis(item) {
+    const response = await axios.post(`${URL}/update`, item);
+    return response.data;
+}
