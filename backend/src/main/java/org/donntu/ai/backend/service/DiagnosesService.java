@@ -8,6 +8,7 @@ import org.donntu.ai.backend.repository.SymptomsRepository;
 import org.donntu.ai.backend.utils.SetsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -72,10 +73,9 @@ public class DiagnosesService {
                 .anyMatch(value -> isHaveSymptomsInput(value, diagnosis));
     }
 
-    //приходит то без id
-    public boolean addSymptom(Symptom symptom) {
-        if (!symptoms.contains(symptom)) {
-            Symptom saved = symptomsRepository.save(symptom);
+    public boolean addSymptom(String name) {
+        if (findSymptomByName(name) == null) { // в локальном списке искать
+            Symptom saved = symptomsRepository.save(new Symptom(name));
             symptoms.add(saved);
             return true;
         } else {
@@ -94,8 +94,11 @@ public class DiagnosesService {
         }
     }
 
-    public boolean deleteSymptom(Symptom symptom) throws Exception {
-        if(symptoms.contains(symptom)) {
+    public boolean deleteSymptom(Long id) throws Exception {
+        Optional<Symptom> symptomById = getSymptomById(id);
+
+        if(symptomById.isPresent()) {
+            Symptom symptom = symptomById.get();
             Set<Diagnosis> diagnosisContainsThisSymptom = diagnoses
                     .stream()
                     .filter(diagnosis -> diagnosis.getSymptoms().contains(symptom))
@@ -118,9 +121,11 @@ public class DiagnosesService {
         }
     }
 
-    public boolean addDiagnosis(Diagnosis diagnosis) {
-        if (isAnyDiagnosisHaveSymptomsInput(diagnosis)) {
-            return false;
+    @Transactional
+    public void addDiagnosis(Diagnosis diagnosis) throws Exception {
+        if (isAnyDiagnosisHaveSymptomsInput(diagnosis)
+                || findDiagnosisByName(diagnosis.getName()) != null) {
+            throw new Exception("Данный диагноз образует коллизии");
         } else {
             Set<Symptom> fromBase = new HashSet<>();
             diagnosis.getSymptoms().forEach(symptom -> {
@@ -128,32 +133,30 @@ public class DiagnosesService {
                 symptomById.ifPresent(fromBase::add);
             });
 
-            diagnosis.setSymptoms(fromBase); //хз че не работает
-
-            diagnosis.getSymptoms()
-                    .forEach(symptom -> {
-                        Set<Diagnosis> diagnoses = symptom.getDiagnoses();
-                        diagnoses.add(diagnosis);
-                        Optional<Symptom> symptomById = getSymptomById(symptom.getId());
-                        symptomById.ifPresent(symptom1 -> diagnoses.addAll(symptom1.getDiagnoses()));
-                    });
-
+            diagnosis.setSymptoms(null);
             Diagnosis saved = diagnosesRepository.save(diagnosis);
-            diagnoses.add(saved);
-            return true;
+
+            fromBase.forEach(symptom -> {
+                Set<Diagnosis> diagnoses = symptom.getDiagnoses();
+                diagnoses.add(saved);
+            });
+
+            saved.setSymptoms(fromBase);
+            Diagnosis saved1 = diagnosesRepository.save(diagnosis);
+            diagnoses.add(saved1);
         }
     }
 
     public boolean updateDiagnosis(Diagnosis diagnosis) throws Exception {
-        Optional<Diagnosis> byId = getDiagnosisById(diagnosis.getId());
-        if (byId.isPresent()) {
-            Set<Diagnosis> compareList = new HashSet<>(diagnoses);
-            compareList.remove(byId.get());
-            if (isAnyDiagnosisHaveSymptomsInput(diagnosis, compareList)) {
+        Optional<Diagnosis> updatingDiagnosis = getDiagnosisById(diagnosis.getId());
+        if (updatingDiagnosis.isPresent()) {
+            Set<Diagnosis> listWithoutUpdatingDiagnosis = new HashSet<>(diagnoses);
+            listWithoutUpdatingDiagnosis.remove(updatingDiagnosis.get());
+            if (isAnyDiagnosisHaveSymptomsInput(diagnosis, listWithoutUpdatingDiagnosis)) {
                 return false;
             } else {
                 Diagnosis saved = diagnosesRepository.save(diagnosis);
-                diagnoses.remove(byId.get());
+                diagnoses.remove(updatingDiagnosis.get());
                 diagnoses.add(saved);
                 return true;
             }
@@ -184,6 +187,24 @@ public class DiagnosesService {
                 .stream()
                 .filter(symptom -> symptom.getId().equals(id))
                 .findFirst();
+    }
+
+    private Symptom findSymptomByName(String name) {
+        for (Symptom symptom : symptoms) {
+            if (symptom.getName().equals(name)) {
+                return symptom;
+            }
+        }
+        return null;
+    }
+
+    private Diagnosis findDiagnosisByName(String name) {
+        for (Diagnosis diagnosis : diagnoses) {
+            if (diagnosis.getName().equals(name)) {
+                return diagnosis;
+            }
+        }
+        return null;
     }
 
     public Set<Symptom> getAllSymptoms() {

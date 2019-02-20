@@ -43,3 +43,18 @@ export async function updateDiagnosis(item) {
     const response = await axios.post(`${URL}/update`, item);
     return response.data;
 }
+
+export async function updateSymptom(item) {
+    const response = await axios.post(`${URL}/symptom/update`, item);
+    return response.data;
+}
+
+export async function deleteDiagnosis(id) {
+    const response = await axios.post(`${URL}/${id}/del`);
+    return response.data;
+}
+
+export async function deleteSymptom(id) {
+    const response = await axios.post(`${URL}/symptom/${id}/del`);
+    return response.data;
+}

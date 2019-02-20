@@ -6,6 +6,7 @@
                 text-field-label="Введите диагноз"
                 @save-new="saveNew"
                 @save-old="saveOld"
+                @remove="remove"
         />
         <v-dialog v-model="dialog"
                   persistent
@@ -116,6 +117,9 @@
             },
             cancel() {
                 this.dialog = false;
+            },
+            remove(item) {
+                this.$emit('remove', item.id);
             },
         },
     };

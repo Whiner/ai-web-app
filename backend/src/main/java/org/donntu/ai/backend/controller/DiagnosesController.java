@@ -23,8 +23,13 @@ public class DiagnosesController {
     }
 
     @PostMapping("/add")
-    public boolean addDiagnosis(@RequestBody AddDiagnosisRequest request) {
-        return diagnosesService.addDiagnosis(new Diagnosis(request.getName(), request.getSymptoms()));
+    public MessageResponse addDiagnosis(@RequestBody AddDiagnosisRequest request) {
+        try {
+            diagnosesService.addDiagnosis(new Diagnosis(request.getName(), request.getSymptoms()));
+            return new MessageResponse("", 200);
+        } catch (Exception e) {
+            return new MessageResponse(e.getMessage(), 418);
+        }
     }
 
     @PostMapping("/{id}/del")
@@ -49,7 +54,27 @@ public class DiagnosesController {
 
     @PostMapping("/symptom/add")
     public boolean addSymptom(@RequestParam String name) {
-        return diagnosesService.addSymptom(new Symptom(name));
+        return diagnosesService.addSymptom(name);
+    }
+
+    @PostMapping("/symptom/update")
+    public MessageResponse updateSymptom(@RequestBody Symptom symptom) {
+        try {
+            diagnosesService.updateSymptom(symptom);
+            return new MessageResponse("", 200);
+        } catch (Exception e) {
+            return new MessageResponse(e.getMessage(), 418);
+        }
+    }
+
+    @PostMapping("/symptom/{id}/del")
+    public MessageResponse delSymptom(@PathVariable Long id) {
+        try {
+            diagnosesService.deleteSymptom(id);
+            return new MessageResponse("", 200);
+        } catch (Exception e) {
+            return new MessageResponse(e.getMessage(), 418);
+        }
     }
 
     @GetMapping("/all")

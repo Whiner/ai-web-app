@@ -3,13 +3,14 @@
             :items="symptoms"
             title="Список симптомов"
             text-field-label="Введите симптом"
-            @save="addSymptom"
+            @save-new="addSymptom"
+            @save-old="updateSymptom"
+            @remove="remove"
     />
 </template>
 
 <script>
     import ListCard from './ListCard.vue';
-    import { addNewSymptom } from '../../client/diagnoses';
 
     export default {
         name: 'SymptomsSettings',
@@ -21,8 +22,14 @@
             },
         },
         methods: {
-            async addSymptom(name) {
-                await addNewSymptom(name);
+            addSymptom(name) {
+                this.$emit('save', { name });
+            },
+            updateSymptom(item) {
+                this.$emit('save', item);
+            },
+            remove(item) {
+                this.$emit('remove', item.id);
             },
         },
     };
