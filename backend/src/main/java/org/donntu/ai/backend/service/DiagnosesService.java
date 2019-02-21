@@ -133,7 +133,7 @@ public class DiagnosesService {
                 symptomById.ifPresent(fromBase::add);
             });
 
-            diagnosis.setSymptoms(null);
+            diagnosis.setSymptoms(new HashSet<>());
             Diagnosis saved = diagnosesRepository.save(diagnosis);
 
             fromBase.forEach(symptom -> {
@@ -141,9 +141,16 @@ public class DiagnosesService {
                 diagnoses.add(saved);
             });
 
-            saved.setSymptoms(fromBase);
-            Diagnosis saved1 = diagnosesRepository.save(diagnosis);
-            diagnoses.add(saved1);
+            saved.getSymptoms().addAll(fromBase);
+            try {
+                Diagnosis saved1 = diagnosesRepository.save(diagnosis);
+                diagnoses.add(saved1);
+            } catch (Exception e) {
+                fromBase.forEach(symptom -> {
+                    Set<Diagnosis> diagnoses = symptom.getDiagnoses();
+                    diagnoses.remove(saved);
+                });
+            }
         }
     }
 

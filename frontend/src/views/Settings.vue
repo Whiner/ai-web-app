@@ -36,21 +36,21 @@
 </template>
 
 <script>
-    import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
-    import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
-    import {
-        addNewDiagnosis,
-        addNewSymptom,
-        deleteDiagnosis,
-        deleteSymptom,
-        getAllDiagnoses,
-        getAllSymptoms,
-        updateDiagnosis,
-        updateSymptom,
-    } from '../client/diagnoses';
-    import compareById from '../utils/compareUtil';
+  import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
+  import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
+  import {
+    addNewDiagnosis,
+    addNewSymptom,
+    deleteDiagnosis,
+    deleteSymptom,
+    getAllDiagnoses,
+    getAllSymptoms,
+    updateDiagnosis,
+    updateSymptom,
+  } from '../client/diagnoses';
+  import compareById from '../utils/compareUtil';
 
-    export default {
+  export default {
         name: 'Settings',
         components: {
             SymptomsSettings,

@@ -27,12 +27,12 @@
 </template>
 
 <script>
-    import SymptomsChoice from '../components/SymptomsChoice.vue';
-    import DiagnosisResult from '../components/DiagnosisResult.vue';
-    import { getAllSymptoms, getDiagnosesBySymptoms } from '../client/diagnoses';
-    import compareById from '../utils/compareUtil';
+  import SymptomsChoice from '../components/SymptomsChoice.vue';
+  import DiagnosisResult from '../components/DiagnosisResult.vue';
+  import { getAllSymptoms, getDiagnosesBySymptoms } from '../client/diagnoses';
+  import compareById from '../utils/compareUtil';
 
-    export default {
+  export default {
         name: 'Diagnosis',
         components: {
             DiagnosisResult,
