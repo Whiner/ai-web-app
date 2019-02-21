@@ -23,9 +23,7 @@ public class Symptom {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.ALL,
-            },
+            cascade = {CascadeType.DETACH},
             mappedBy = "symptoms")
     @JsonIgnore
     private Set<Diagnosis> diagnoses = new HashSet<>();

@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faAmbulance,
-  faCat,
-  faChartArea,
-  faCommentMedical,
-  faEdit,
-  faStethoscope,
-  faTrash,
+    faAmbulance,
+    faCat,
+    faChartArea,
+    faCommentMedical,
+    faEdit,
+    faStethoscope,
+    faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from './router/index';

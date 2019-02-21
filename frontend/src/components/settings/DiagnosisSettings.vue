@@ -50,10 +50,10 @@
 </template>
 
 <script>
-  import ListCard from './ListCard.vue';
+    import ListCard from './ListCard.vue';
 
 
-  export default {
+    export default {
         name: 'DiagnosisSettings',
         components: { ListCard },
         props: {

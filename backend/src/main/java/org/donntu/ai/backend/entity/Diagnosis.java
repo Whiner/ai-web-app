@@ -22,9 +22,7 @@ public class Diagnosis {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.ALL
-            })
+            cascade = {CascadeType.DETACH})
     @JoinTable(name = "diagnoses_symptoms",
             joinColumns = {@JoinColumn(name = "diagnoses_id")},
             inverseJoinColumns = {@JoinColumn(name = "symptoms_id")})
