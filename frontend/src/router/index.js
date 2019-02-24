@@ -4,6 +4,7 @@ import Diagnosis from '../views/Diagnosis.vue';
 import Main from '../views/Main.vue';
 import App from '../App.vue';
 import Settings from '../views/Settings.vue';
+import Animals from '../views/Animals.vue';
 
 Vue.use(Router);
 
@@ -23,7 +24,7 @@ export default new Router({
             {
                 path: '/animals',
                 name: 'animals',
-                component: Diagnosis,
+                component: Animals,
             },
             {
                 path: '/extremum',

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "animal_signs")
+@Table(name = "signs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,7 +56,6 @@ public class AnimalSign {
     public String toString() {
         return "Sign {" +
                 "id=" + id +
-                ", name='" + name + "'" +
-                ", signs='" + animals + "'";
+                ", name='" + name + "'";
     }
 }

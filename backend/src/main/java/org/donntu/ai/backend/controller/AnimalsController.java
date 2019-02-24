@@ -27,7 +27,11 @@ public class AnimalsController {
     @GetMapping("/nextQuestion")
     public SignResponse getNextQuestion(@RequestParam(required = false) Boolean lastAnswer) throws Exception {
         AnimalSign animalSign = animalService.nextQuestion(lastAnswer);
-        return new SignResponse(animalSign.getId(), animalSign.getName());
+        if(animalSign != null) {
+            return new SignResponse(animalSign.getId(), animalSign.getName());
+        } else {
+            return null;
+        }
     }
 
     @PostMapping("/clear")

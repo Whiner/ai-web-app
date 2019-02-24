@@ -29,7 +29,7 @@
                     </v-flex>
                 </v-layout>
                 <v-layout row justify-center>
-                    <img src="../assets/diagnosis.png" alt="Диагноз">
+                    <img src="../../assets/diagnosis.png" alt="Диагноз">
                 </v-layout>
             </v-container>
             <v-container v-else fluid>

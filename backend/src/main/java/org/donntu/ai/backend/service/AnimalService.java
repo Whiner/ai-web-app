@@ -34,48 +34,32 @@ public class AnimalService {
 
     public Animal getAnimalByAcceptedSigns() throws Exception {
         if (acceptedSigns.size() != requiredSignCount) {
-            throw new Exception("Необходимое количество ответов еще не набрано");
+            return null;
         }
-        Set<Animal> animals = getAllAnimals();
-        Set<AnimalSign> signs;
-        boolean allContains;
-        for (Animal animal : animals) {
-            allContains = true;
-            signs = animal.getSigns();
-            if (signs.size() == acceptedSigns.size()) {
-                for (AnimalSign sign : signs) {
-                    if (!acceptedSigns.contains(sign)) {
-                        allContains = false;
-                        break;
-                    }
-                }
-                if (allContains) {
-                    return animal;
-                }
-            }
+        if(possibleAnswers.size() != 1) {
+            throw new Exception("Единый ответ не найден. Количество попадающих под данные признаки больше 1");
         }
-        return null;
+        return possibleAnswers.stream().findFirst().orElse(null);
     }
 
     public AnimalSign nextQuestion(Boolean lastAnswer) throws Exception {
         if (lastSign == null) {
-            possibleAnswers = getAllAnimals();
             remainingSigns = new ArrayList<>(getAllSigns());
+            possibleAnswers = getAllAnimals();
             acceptedSigns = new HashSet<>();
         } else {
             if (lastAnswer) {
                 acceptedSigns.add(lastSign);
+                possibleAnswers = possibleAnswers
+                        .stream()
+                        .filter(animal -> isAnimalContainsAllSign(animal, acceptedSigns))
+                        .collect(Collectors.toSet());
                 if (acceptedSigns.size() == requiredSignCount) {
                     if (possibleAnswers.size() > 1) {
                         throw new Exception("Не удалось определить животное. " +
                                 "По данным признакам найдено " + possibleAnswers.size() + " результатов");
                     }
                     return null;
-                } else {
-                    possibleAnswers = possibleAnswers
-                            .stream()
-                            .filter(animal -> isAnimalContainsAllSign(animal, acceptedSigns))
-                            .collect(Collectors.toSet());
                 }
             } else {
                 possibleAnswers = possibleAnswers
@@ -83,11 +67,32 @@ public class AnimalService {
                         .filter(animal -> !animal.getSigns().contains(lastSign))
                         .collect(Collectors.toSet());
             }
+            remainingSigns = getUniqueSighsFromAnimalList(possibleAnswers);
+            remainingSigns = remainingSigns
+                    .stream()
+                    .filter(sign -> !acceptedSigns.contains(sign))
+                    .collect(Collectors.toList());
+        }
+        if(remainingSigns.isEmpty()) {
+            throw new Exception("Подходящие признаки отсутствуют");
         }
         int nextSignIndex = random.nextInt(remainingSigns.size());
         lastSign = remainingSigns.get(nextSignIndex);
         remainingSigns.remove(lastSign);
         return lastSign;
+    }
+
+    private List<AnimalSign> getUniqueSighsFromAnimalList(Set<Animal> animals) {
+        List<AnimalSign> animalSigns = new ArrayList<>();
+        for (Animal animal : animals) {
+            Set<AnimalSign> signs = animal.getSigns();
+            for (AnimalSign sign : signs) {
+                if(!animalSigns.contains(sign)) {
+                    animalSigns.add(sign);
+                }
+            }
+        }
+        return animalSigns;
     }
 
     private boolean isAnimalContainsAllSign(Animal animal, Set<AnimalSign> signs) {

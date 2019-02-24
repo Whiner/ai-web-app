@@ -47,7 +47,7 @@
         getAllSymptoms,
         updateDiagnosis,
         updateSymptom,
-    } from '../client/diagnoses';
+    } from '../client/diagnoses-client';
     import compareById from '../utils/compareUtil';
 
     export default {
