@@ -1,6 +1,6 @@
 package org.donntu.ai.backend.service;
 
-import org.donntu.ai.backend.dto.DiagnosesListResponse;
+import org.donntu.ai.backend.dto.diagnoses.DiagnosesListResponse;
 import org.donntu.ai.backend.entity.Diagnosis;
 import org.donntu.ai.backend.entity.Symptom;
 import org.donntu.ai.backend.repository.DiagnosesRepository;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class DiagnosesService {

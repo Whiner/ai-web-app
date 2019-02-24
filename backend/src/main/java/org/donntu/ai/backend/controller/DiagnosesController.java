@@ -1,6 +1,10 @@
 package org.donntu.ai.backend.controller;
 
 import org.donntu.ai.backend.dto.*;
+import org.donntu.ai.backend.dto.diagnoses.AddDiagnosisRequest;
+import org.donntu.ai.backend.dto.diagnoses.DiagnosesBySymptomsRequest;
+import org.donntu.ai.backend.dto.diagnoses.DiagnosesListResponse;
+import org.donntu.ai.backend.dto.diagnoses.SymptomsListResponse;
 import org.donntu.ai.backend.entity.Diagnosis;
 import org.donntu.ai.backend.entity.Symptom;
 import org.donntu.ai.backend.service.DiagnosesService;

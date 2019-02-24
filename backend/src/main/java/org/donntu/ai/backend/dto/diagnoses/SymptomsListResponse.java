@@ -1,4 +1,4 @@
-package org.donntu.ai.backend.dto;
+package org.donntu.ai.backend.dto.diagnoses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
