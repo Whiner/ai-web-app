@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/animals")
@@ -19,19 +20,9 @@ public class AnimalsController {
         this.animalService = animalService;
     }
 
-    @GetMapping("/signs/all")
-    public Set<AnimalSign> getAllSigns() {
-        return animalService.getAllSigns();
-    }
-
-    @GetMapping("/nextQuestion")
+    @GetMapping("/next-question")
     public SignResponse getNextQuestion(@RequestParam(required = false) Boolean lastAnswer) throws Exception {
-        AnimalSign animalSign = animalService.nextQuestion(lastAnswer);
-        if(animalSign != null) {
-            return new SignResponse(animalSign.getId(), animalSign.getName());
-        } else {
-            return null;
-        }
+        return animalService.nextQuestion(lastAnswer);
     }
 
     @PostMapping("/clear")
@@ -41,8 +32,27 @@ public class AnimalsController {
 
     @GetMapping("/answer")
     public AnimalResponse getAnswer() throws Exception {
-        return AnimalResponse.of(animalService.getAnimalByAcceptedSigns());
+        return animalService.getAnimalByAcceptedSigns();
     }
+
+    @GetMapping("/accepted-signs")
+    public Set<SignResponse> getAcceptedSigns() {
+        return animalService
+                .getAcceptedSigns()
+                .stream()
+                .map(SignResponse::of)
+                .collect(Collectors.toSet());
+    }
+
+    @GetMapping("/signs")
+    public Set<SignResponse> getAllSigns() {
+        return animalService
+                .getAllSigns()
+                .stream()
+                .map(SignResponse::of)
+                .collect(Collectors.toSet());
+    }
+
 
     /*@PostMapping("/add")
     public MessageResponse addDiagnosis(@RequestBody AddDiagnosisRequest request) {

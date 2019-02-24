@@ -1,5 +1,7 @@
 package org.donntu.ai.backend.service;
 
+import org.donntu.ai.backend.dto.animals.AnimalResponse;
+import org.donntu.ai.backend.dto.animals.SignResponse;
 import org.donntu.ai.backend.entity.Animal;
 import org.donntu.ai.backend.entity.AnimalSign;
 import org.donntu.ai.backend.repository.AnimalSignRepository;
@@ -32,17 +34,17 @@ public class AnimalService {
         this.signRepository = signRepository;
     }
 
-    public Animal getAnimalByAcceptedSigns() throws Exception {
+    public AnimalResponse getAnimalByAcceptedSigns() throws Exception {
         if (acceptedSigns.size() != requiredSignCount) {
-            return null;
+            return AnimalResponse.of(acceptedSigns);
         }
         if(possibleAnswers.size() != 1) {
             throw new Exception("Единый ответ не найден. Количество попадающих под данные признаки больше 1");
         }
-        return possibleAnswers.stream().findFirst().orElse(null);
+        return AnimalResponse.of(possibleAnswers.stream().findFirst().orElse(null));
     }
 
-    public AnimalSign nextQuestion(Boolean lastAnswer) throws Exception {
+    public SignResponse nextQuestion(Boolean lastAnswer) throws Exception {
         if (lastSign == null) {
             remainingSigns = new ArrayList<>(getAllSigns());
             possibleAnswers = getAllAnimals();
@@ -74,12 +76,12 @@ public class AnimalService {
                     .collect(Collectors.toList());
         }
         if(remainingSigns.isEmpty()) {
-            throw new Exception("Подходящие признаки отсутствуют");
+            return null;
         }
         int nextSignIndex = random.nextInt(remainingSigns.size());
         lastSign = remainingSigns.get(nextSignIndex);
         remainingSigns.remove(lastSign);
-        return lastSign;
+        return SignResponse.of(lastSign);
     }
 
     private List<AnimalSign> getUniqueSighsFromAnimalList(Set<Animal> animals) {
@@ -118,5 +120,9 @@ public class AnimalService {
         acceptedSigns = null;
         remainingSigns = null;
         lastSign = null;
+    }
+
+    public Set<AnimalSign> getAcceptedSigns() {
+        return acceptedSigns;
     }
 }
