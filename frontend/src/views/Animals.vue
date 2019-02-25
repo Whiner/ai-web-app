@@ -2,7 +2,7 @@
     <v-container fluid mt-5>
         <v-layout justify-center>
             <v-flex xs6>
-                <SignQuestions v-if="false" :sign="sign.name" @answer="onAnswer" />
+                <SignQuestions v-if="sign" :sign="sign.name" @answer="onAnswer" />
                 <AnimalForm v-if="signs" :signs="signs" />
             </v-flex>
         </v-layout>
@@ -46,7 +46,7 @@
                             console.log(`Это ${response.name}`);
                             this.answer = response;
                         } else {
-                            console.log(`Добавить нада. ${response.signs}`);
+                            this.signs = response.signs; // перенести это все в настройки вообще
                         }
                     }
                 } catch (e) {
