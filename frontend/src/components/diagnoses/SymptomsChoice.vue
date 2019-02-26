@@ -20,7 +20,6 @@
                     <v-flex>
                         <v-checkbox
                                 v-model="symptom.checked"
-                                class="dark-color"
                                 hide-details
                                 color="secondary"
                                 :label="symptom.name"

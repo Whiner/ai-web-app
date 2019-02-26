@@ -2,27 +2,44 @@
     <v-container fluid mt-5>
         <v-layout justify-center>
             <v-flex xs6>
-                <SignQuestions v-if="sign" :sign="sign.name" @answer="onAnswer" />
-                <AnimalForm v-if="signs" :signs="signs" />
+                <SignQuestions v-if="sign && !answer" :sign="sign.name" @answer="onAnswer" />
+                <AnimalAnswer
+                        v-else-if="answer"
+                        :answer="answer"
+                        @refresh="onRefresh"
+                        @edit="onEdit"
+                />
+                <AnimalForm
+                        v-else-if="editingAnimal && signs"
+                        :checked-signs="editingAnimal.signs"
+                        :signs="signs"
+                        @dismiss="onDismiss"
+                />
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 
 <script>
-    import SignQuestions from '../components/animals/SignQuestions.vue';
-    import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
-    import AnimalForm from '../components/animals/AnimalForm.vue';
-    import compareById from '../utils/compareUtil';
+  import SignQuestions from '../components/animals/SignQuestions.vue';
+  import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
+  import AnimalForm from '../components/animals/AnimalForm.vue';
+  import compareById from '../utils/compareUtil';
+  import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
 
-    export default {
+  export default {
         name: 'Animals',
-        components: { AnimalForm, SignQuestions },
+        components: {
+            AnimalAnswer,
+            AnimalForm,
+            SignQuestions,
+        },
         data() {
             return {
                 sign: null,
                 answer: null,
                 signs: null,
+                editingAnimal: null,
             };
         },
         async beforeRouteEnter(to, from, next) {
@@ -40,18 +57,34 @@
                     let response = await nextQuestion(result);
                     if (response) {
                         this.sign = response;
+                        console.log('следующий вопрос');
                     } else {
                         response = await getAnswer();
                         if (response.id) {
-                            console.log(`Это ${response.name}`);
                             this.answer = response;
+                            console.log('ответ');
                         } else {
-                            this.signs = response.signs; // перенести это все в настройки вообще
+                            this.editingAnimal = response;
+                            this.answer = null;
+                            this.sign = null;
+                            console.log('добавление');
                         }
                     }
                 } catch (e) {
                     console.log(e);
                 }
+            },
+            async onRefresh() {
+                await clear();
+                this.sign = await nextQuestion(null);
+                this.answer = null;
+            },
+            onEdit() {
+
+            },
+            onDismiss() {
+                this.editingAnimal = null;
+                this.onRefresh();
             },
         },
     };

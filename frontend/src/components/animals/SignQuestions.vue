@@ -1,15 +1,20 @@
 <template>
     <v-card>
-        <v-card-title class="elevation-1">
-            <p class="mb-0 header-text">
+        <v-card-title>
+            <p class="mb-0 ml-2 header-text">
                 Ответьте на вопрос
             </p>
         </v-card-title>
-        <v-card-text>
-            <p class="content-text px-4 mb-0">
-                У этого животного есть {{ sign }}?
+        <v-divider />
+        <v-card-text class="my-4">
+            <p class="content-text px-4 mb-0 text-xs-center">
+                У этого животного есть
+                <span class="question">
+                    {{ sign.toUpperCase() }}?
+                </span>
             </p>
         </v-card-text>
+        <v-divider />
         <v-card-actions class="layout justify-center">
             <v-flex xs4 mr-3>
                 <v-btn block
@@ -60,5 +65,9 @@
 
   .content-text {
     font-size 1.2rem
+  }
+
+  .question {
+    color #2a7a35
   }
 </style>

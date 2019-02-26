@@ -23,12 +23,14 @@
                             :to="item.route"
                             class="transition-off"
                     >
-                        <v-list-tile-action>
-                            <font-awesome-icon
-                                    class="fa-lg transition-on"
-                                    :icon="item.icon"
-                            />
-                        </v-list-tile-action>
+                        <transition>
+                            <v-list-tile-action>
+                                <font-awesome-icon
+                                        class="fa-lg transition-on"
+                                        :icon="item.icon"
+                                />
+                            </v-list-tile-action>
+                        </transition>
                         <v-list-tile-content>
                             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                         </v-list-tile-content>
