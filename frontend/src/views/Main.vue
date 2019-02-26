@@ -11,9 +11,9 @@
 
 <script>
 
-  import Sidebar from '../components/Sidebar.vue';
+    import Sidebar from '../components/Sidebar.vue';
 
-  export default {
+    export default {
         name: 'Main',
         components: { Sidebar },
     };

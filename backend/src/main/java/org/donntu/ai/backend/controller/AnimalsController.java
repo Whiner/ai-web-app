@@ -1,7 +1,10 @@
 package org.donntu.ai.backend.controller;
 
+import org.donntu.ai.backend.dto.MessageResponse;
+import org.donntu.ai.backend.dto.animals.AddAnimalRequest;
 import org.donntu.ai.backend.dto.animals.AnimalResponse;
 import org.donntu.ai.backend.dto.animals.SignResponse;
+import org.donntu.ai.backend.entity.Animal;
 import org.donntu.ai.backend.entity.AnimalSign;
 import org.donntu.ai.backend.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,11 @@ public class AnimalsController {
                 .collect(Collectors.toSet());
     }
 
+    @PostMapping("/add")
+    public MessageResponse addAnimal(@RequestBody AddAnimalRequest request) {
+        animalService.addAnimal(new Animal(request.getName(), request.getSigns()));
+        return new MessageResponse();
+    }
 
     /*@PostMapping("/add")
     public MessageResponse addDiagnosis(@RequestBody AddDiagnosisRequest request) {

@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid mt-5>
+    <v-container fluid mt-2>
         <v-layout justify-center>
             <v-flex xs6>
                 <SignQuestions v-if="sign && !answer" :sign="sign.name" @answer="onAnswer" />
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-  import SignQuestions from '../components/animals/SignQuestions.vue';
-  import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
-  import AnimalForm from '../components/animals/AnimalForm.vue';
-  import compareById from '../utils/compareUtil';
-  import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
+    import SignQuestions from '../components/animals/SignQuestions.vue';
+    import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
+    import AnimalForm from '../components/animals/AnimalForm.vue';
+    import compareById from '../utils/compareUtil';
+    import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
 
-  export default {
+    export default {
         name: 'Animals',
         components: {
             AnimalAnswer,
@@ -57,17 +57,14 @@
                     let response = await nextQuestion(result);
                     if (response) {
                         this.sign = response;
-                        console.log('следующий вопрос');
                     } else {
                         response = await getAnswer();
                         if (response.id) {
                             this.answer = response;
-                            console.log('ответ');
                         } else {
                             this.editingAnimal = response;
                             this.answer = null;
                             this.sign = null;
-                            console.log('добавление');
                         }
                     }
                 } catch (e) {

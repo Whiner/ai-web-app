@@ -40,7 +40,7 @@
             <v-flex xs1>
                 <v-list>
                     <v-list-tile :to="settings.route">
-                        <v-list-tile-action>
+                        <v-list-tile-action class="justify-center">
                             <v-icon>{{ settings.icon }}</v-icon>
                         </v-list-tile-action>
 
@@ -99,5 +99,9 @@
   .transition-on {
     transition 0.5s
   }
-
+  .v-list__tile__action{
+    justify-content center!important
+    max-width 48px !important
+    min-width 48px !important
+  }
 </style>

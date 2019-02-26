@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -52,8 +53,9 @@ public class Animal {
         return name != null ? name.hashCode() : 0;
     }
 
-    public Animal(String name) {
+    public Animal(String name, Set<AnimalSign> signs) {
         this.name = name;
+        this.signs = signs;
     }
 
     @Override

@@ -125,4 +125,8 @@ public class AnimalService {
     public Set<AnimalSign> getAcceptedSigns() {
         return acceptedSigns;
     }
+
+    public void addAnimal(Animal animal) {
+
+    }
 }

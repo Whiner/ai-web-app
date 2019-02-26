@@ -8,7 +8,7 @@
         <v-divider />
         <v-card-text class="py-0 my-3">
             <v-container fluid py-0 px-3>
-                <v-layout v-for="sign in showingSigns"
+                <v-layout v-for="sign in localSigns"
                           :key="sign.id"
                           row
                           mb-2
@@ -25,9 +25,27 @@
                 </v-layout>
                 <v-layout row mt-3 ml-1>
                     <v-flex>
-                        <v-text-field v-model="name" label="Название" />
+                        <v-text-field
+                                v-model="name"
+                                label="Название"
+                                :rules="rules"
+                        />
                     </v-flex>
                 </v-layout>
+                <transition name="component-fade" mode="out-in">
+                    <v-layout v-show="alert" row mt-1>
+                        <v-flex>
+                            <v-alert
+                                    :value="true"
+                                    color="error"
+                                    icon="warning"
+                                    outline
+                            >
+                                {{ alertText }}
+                            </v-alert>
+                        </v-flex>
+                    </v-layout>
+                </transition>
             </v-container>
         </v-card-text>
         <v-divider />
@@ -36,6 +54,7 @@
                 <v-btn flat
                        block
                        color="success"
+                       :loading="loading"
                        @click="add"
                 >
                     Добавить
@@ -70,36 +89,52 @@
         data() {
             return {
                 name: '',
+                localSigns: null,
+                loading: false,
+                alert: false,
+                alertText: 'Ошибка',
+                rules: [
+                    v => (v.length > 0 ? true : 'Поле не должно быть пустым'),
+                    v => (v && v.trim().length > 0 ? true : 'Поле не должно состоять только из пробелов'),
+                ],
             };
         },
         computed: {
-            localSigns() {
-                return this.signs.map(v => ({
+            currentChecked() {
+                return this.localSigns.filter(v => v.checked);
+            },
+        },
+        created() {
+            if (this.signs && this.checkedSigns) {
+                this.localSigns = this.signs.map(v => ({
                     id: v.id,
                     name: v.name,
                     checked: false,
                 }));
-            },
-            currentChecked() {
-                return this.localSigns.filter(v => v.checked);
-            },
-            showingSigns() {
                 this.localSigns.forEach((v) => {
                     if (this.checkedSigns.find(value => v.id === value.id)) {
                         v.checked = true;
                     }
                 });
-                return this.localSigns;
-            },
-
+            }
         },
         methods: {
             add() {
-                // this.$emit('add', this.name, this.currentChecked);
-                console.log('add');
+                if (this.currentChecked.length !== 2) {
+                    this.alertText = 'Необходимо выбрать 2 признака';
+                    this.showAlert();
+                } else if (this.name.length > 1 && this.currentChecked.length === 2) {
+                    this.$emit('add', this.name, this.currentChecked);
+                }
             },
             dismiss() {
                 this.$emit('dismiss');
+            },
+            showAlert() {
+                this.alert = true;
+                setTimeout(() => {
+                    this.alert = false;
+                }, 3000);
             },
         },
     };
@@ -109,6 +144,7 @@
   .title {
     font-size 1.3rem
   }
+
   .theme--light >>> .v-label {
     color var(--secondary-base)
   }
