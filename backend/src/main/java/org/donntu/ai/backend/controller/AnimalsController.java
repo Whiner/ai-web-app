@@ -5,7 +5,6 @@ import org.donntu.ai.backend.dto.animals.AddAnimalRequest;
 import org.donntu.ai.backend.dto.animals.AnimalResponse;
 import org.donntu.ai.backend.dto.animals.SignResponse;
 import org.donntu.ai.backend.entity.Animal;
-import org.donntu.ai.backend.entity.AnimalSign;
 import org.donntu.ai.backend.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +56,7 @@ public class AnimalsController {
     }
 
     @PostMapping("/add")
-    public MessageResponse addAnimal(@RequestBody AddAnimalRequest request) {
+    public MessageResponse addAnimal(@RequestBody AddAnimalRequest request) throws Exception {
         animalService.addAnimal(new Animal(request.getName(), request.getSigns()));
         return new MessageResponse();
     }

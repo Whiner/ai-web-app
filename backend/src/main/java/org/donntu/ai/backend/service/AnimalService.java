@@ -126,7 +126,13 @@ public class AnimalService {
         return acceptedSigns;
     }
 
-    public void addAnimal(Animal animal) {
-
+    public void addAnimal(Animal animal) throws Exception {
+        Set<Animal> allAnimals = getAllAnimals();
+        boolean anyMatch = allAnimals
+                .stream()
+                .anyMatch(a -> a.getSigns().containsAll(animal.getSigns()));
+        if(anyMatch) {
+            throw new Exception("Животное с такими признаками уже существует");
+        }
     }
 }

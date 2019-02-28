@@ -38,13 +38,13 @@ public class DiagnosesService {
     }
 
     private boolean isDiagnosisContainsAllSymptoms(Diagnosis diagnosis, Set<Symptom> symptoms) {
-        Set<Symptom> diagnosisSymptoms = diagnosis.getSymptoms();
-        for (Symptom symptom : symptoms) {
+        return diagnosis.getSymptoms().containsAll(symptoms);
+        /*for (Symptom symptom : symptoms) {
             if (!diagnosisSymptoms.contains(symptom)) {
                 return false;
             }
         }
-        return true;
+        return true;*/
     }
 
     private boolean isHaveSymptomsInput(Diagnosis source, Diagnosis dest) {
