@@ -24,3 +24,7 @@ export async function getAllSigns() {
     const response = await axios.get(`${URL}/signs`);
     return response.data;
 }
+
+export async function addAnimal(animal) {
+    await axios.post(`${URL}/add`, animal);
+}

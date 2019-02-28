@@ -74,7 +74,9 @@
 </template>
 
 <script>
-    export default {
+  import { addAnimal } from '../../client/animals-client';
+
+  export default {
         name: 'AnimalForm',
         props: {
             signs: {
@@ -119,16 +121,20 @@
             }
         },
         methods: {
-            add() {
+            async add() {
                 if (this.currentChecked.length !== 2) {
                     this.alertText = 'Необходимо выбрать 2 признака';
                     this.showAlert();
                 } else if (this.name.length > 1 && this.currentChecked.length === 2) {
-                    this.$emit('add', this.name, this.currentChecked);
+                    await addAnimal({
+                        name: this.name,
+                        signs: this.currentChecked,
+                    });
+                    this.$emit('close');
                 }
             },
             dismiss() {
-                this.$emit('dismiss');
+                this.$emit('close');
             },
             showAlert() {
                 this.alert = true;
