@@ -2,19 +2,25 @@
     <v-container fluid mt-2>
         <v-layout justify-center>
             <v-flex xs6>
-                <SignQuestions v-if="sign && !answer" :sign="sign.name" @answer="onAnswer" />
-                <AnimalAnswer
-                        v-else-if="answer"
-                        :answer="answer"
-                        @refresh="onRefresh"
-                        @edit="onEdit"
-                />
-                <AnimalForm
-                        v-else-if="editingAnimal && signs"
-                        :checked-signs="editingAnimal.signs"
-                        :signs="signs"
-                        @dismiss="onDismiss"
-                />
+                <transition name="component-fade" mode="out-in">
+                    <SignQuestions
+                            v-if="sign && currentShowing === showingVariants.question"
+                            :sign="sign.name"
+                            @answer="onAnswer"
+                    />
+                    <AnimalAnswer
+                            v-if="answer && currentShowing === showingVariants.answer"
+                            :answer="answer"
+                            @refresh="onRefresh"
+                            @edit="onEdit"
+                    />
+                    <AnimalForm
+                            v-if="editingAnimal && signs && currentShowing === showingVariants.form"
+                            :checked-signs="editingAnimal.signs"
+                            :signs="signs"
+                            @close="onClose"
+                    />
+                </transition>
             </v-flex>
         </v-layout>
     </v-container>
@@ -36,6 +42,8 @@
         },
         data() {
             return {
+                showingVariants: { question: 1, answer: 2, form: 3 },
+                currentShowing: null,
                 sign: null,
                 answer: null,
                 signs: null,
@@ -49,6 +57,7 @@
             next(async (vm) => {
                 vm.sign = await sign;
                 vm.signs = (await signs).sort(compareById);
+                vm.currentShowing = vm.showingVariants.question;
             });
         },
         methods: {
@@ -61,10 +70,12 @@
                         response = await getAnswer();
                         if (response.id) {
                             this.answer = response;
+                            this.currentShowing = this.showingVariants.answer;
                         } else {
                             this.editingAnimal = response;
                             this.answer = null;
                             this.sign = null;
+                            this.currentShowing = this.showingVariants.form;
                         }
                     }
                 } catch (e) {
@@ -75,11 +86,13 @@
                 await clear();
                 this.sign = await nextQuestion(null);
                 this.answer = null;
+                this.currentShowing = this.showingVariants.question;
             },
             onEdit() {
-
+                this.editingAnimal = this.answer;
+                this.currentShowing = this.showingVariants.form;
             },
-            onDismiss() {
+            onClose() {
                 this.editingAnimal = null;
                 this.onRefresh();
             },

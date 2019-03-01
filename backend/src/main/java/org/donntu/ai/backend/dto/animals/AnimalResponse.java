@@ -21,9 +21,14 @@ public class AnimalResponse {
 
     public static AnimalResponse of(Animal animal) {
         AnimalResponse response = new AnimalResponse();
-        if(animal != null) {
+        if (animal != null) {
             response.setId(animal.getId());
             response.setName(animal.getName());
+            response.setSigns(
+                    animal.getSigns()
+                            .stream()
+                            .map(SignResponse::of)
+                            .collect(Collectors.toSet()));
         }
         return response;
     }
@@ -31,9 +36,9 @@ public class AnimalResponse {
     public static AnimalResponse of(Set<AnimalSign> signs) {
         AnimalResponse response = new AnimalResponse();
         response.setSigns(signs
-                        .stream()
-                        .map(SignResponse::of)
-                        .collect(Collectors.toSet()));
+                .stream()
+                .map(SignResponse::of)
+                .collect(Collectors.toSet()));
         return response;
     }
 }
