@@ -74,9 +74,9 @@
 </template>
 
 <script>
-  import { addAnimal } from '../../client/animals-client';
+    import { addAnimal } from '../../client/animals-client';
 
-  export default {
+    export default {
         name: 'AnimalForm',
         props: {
             signs: {
