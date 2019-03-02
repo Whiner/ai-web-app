@@ -16,7 +16,7 @@ public class AnimalResponse {
     private Long id;
     private String name;
 
-    private Set<SignResponse> signs;
+    private Set<SignDto> signs;
     //private byte[] image;
 
     public static AnimalResponse of(Animal animal) {
@@ -27,7 +27,7 @@ public class AnimalResponse {
             response.setSigns(
                     animal.getSigns()
                             .stream()
-                            .map(SignResponse::of)
+                            .map(SignDto::of)
                             .collect(Collectors.toSet()));
         }
         return response;
@@ -37,7 +37,7 @@ public class AnimalResponse {
         AnimalResponse response = new AnimalResponse();
         response.setSigns(signs
                 .stream()
-                .map(SignResponse::of)
+                .map(SignDto::of)
                 .collect(Collectors.toSet()));
         return response;
     }

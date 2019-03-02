@@ -16,7 +16,7 @@
                     />
                     <AnimalForm
                             v-if="editingAnimal && signs && currentShowing === showingVariants.form"
-                            :checked-signs="editingAnimal.signs"
+                            :editing-animal="editingAnimal"
                             :signs="signs"
                             @close="onClose"
                     />
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-  import SignQuestions from '../components/animals/SignQuestions.vue';
-  import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
-  import AnimalForm from '../components/animals/AnimalForm.vue';
-  import compareById from '../utils/compareUtil';
-  import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
+    import SignQuestions from '../components/animals/SignQuestions.vue';
+    import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
+    import AnimalForm from '../components/animals/AnimalForm.vue';
+    import compareById from '../utils/compareUtil';
+    import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
 
-  export default {
+    export default {
         name: 'Animals',
         components: {
             AnimalAnswer,
@@ -42,7 +42,11 @@
         },
         data() {
             return {
-                showingVariants: { question: 1, answer: 2, form: 3 },
+                showingVariants: {
+                    question: 1,
+                    answer: 2,
+                    form: 3,
+                },
                 currentShowing: null,
                 sign: null,
                 answer: null,

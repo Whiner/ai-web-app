@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>
             <p class="mb-0 ml-2 title">
-                Добавить животное
+                {{ title }}
             </p>
         </v-card-title>
         <v-divider />
@@ -26,9 +26,10 @@
                 <v-layout row mt-3 ml-1>
                     <v-flex>
                         <v-text-field
-                                v-model="name"
+                                v-model="animalName"
                                 label="Название"
                                 :rules="rules"
+                                prepend-icon="build"
                         />
                     </v-flex>
                 </v-layout>
@@ -57,7 +58,7 @@
                        :loading="loading"
                        @click="add"
                 >
-                    Добавить
+                    Сохранить
                 </v-btn>
             </v-flex>
             <v-flex xs4 ml-3>
@@ -74,7 +75,7 @@
 </template>
 
 <script>
-    import { addAnimal } from '../../client/animals-client';
+    import { addAnimal, updateAnimal } from '../../client/animals-client';
 
     export default {
         name: 'AnimalForm',
@@ -83,22 +84,23 @@
                 type: Array,
                 default: null,
             },
-            checkedSigns: {
-                type: Array,
+            editingAnimal: {
+                type: Object,
                 default: null,
             },
         },
         data() {
             return {
-                name: '',
+                animalName: '',
                 localSigns: null,
                 loading: false,
                 alert: false,
                 alertText: 'Ошибка',
                 rules: [
-                    v => (v.length > 0 ? true : 'Поле не должно быть пустым'),
+                    v => (v && v.length > 0 ? true : 'Поле не должно быть пустым'),
                     v => (v && v.trim().length > 0 ? true : 'Поле не должно состоять только из пробелов'),
                 ],
+                title: '',
             };
         },
         computed: {
@@ -107,17 +109,24 @@
             },
         },
         created() {
-            if (this.signs && this.checkedSigns) {
+            if (this.signs && this.editingAnimal) {
                 this.localSigns = this.signs.map(v => ({
                     id: v.id,
                     name: v.name,
                     checked: false,
                 }));
                 this.localSigns.forEach((v) => {
-                    if (this.checkedSigns.find(value => v.id === value.id)) {
+                    if (this.editingAnimal.signs.find(value => v.id === value.id)) {
                         v.checked = true;
                     }
                 });
+
+                if (this.editingAnimal.name !== '') {
+                    this.title = 'Изменение животного';
+                    this.animalName = this.editingAnimal.name;
+                } else {
+                    this.title = 'Добавление животного';
+                }
             }
         },
         methods: {
@@ -125,11 +134,21 @@
                 if (this.currentChecked.length !== 2) {
                     this.alertText = 'Необходимо выбрать 2 признака';
                     this.showAlert();
-                } else if (this.name.length > 1 && this.currentChecked.length === 2) {
-                    await addAnimal({
-                        name: this.name,
-                        signs: this.currentChecked,
-                    });
+                } else if (this.animalName.length > 1 && this.currentChecked.length === 2) {
+                    if (this.editingAnimal.id) {
+                        await updateAnimal(
+                            this.editingAnimal.id,
+                            {
+                                name: this.animalName,
+                                signs: this.currentChecked,
+                            },
+                        );
+                    } else {
+                        await addAnimal({
+                            name: this.animalName,
+                            signs: this.currentChecked,
+                        });
+                    }
                     this.$emit('close');
                 }
             },

@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-layout row>
-            <v-flex xs6 mr-3>
+            <v-flex xs6 pr-3>
                 <DiagnosisSettings
                         :symptoms="symptoms"
                         :diagnoses="diagnoses"
@@ -9,11 +9,26 @@
                         @remove="removeDiagnosis"
                 />
             </v-flex>
-            <v-flex xs6 ml-3>
+            <v-flex xs6 pl-3>
                 <SymptomsSettings
                         :symptoms="symptoms"
                         @save="saveSymptom"
                         @remove="removeSymptom"
+                />
+            </v-flex>
+        </v-layout>
+        <v-layout row mt-3>
+            <v-flex xs6 pr-3>
+                <AnimalSettings
+                        :signs="signs"
+                        :animals="animals"
+                        @update="updateAnimalsData"
+                />
+            </v-flex>
+            <v-flex xs6 pl-3>
+                <SignSettings
+                        :signs="signs"
+                        @update="updateSignsAndAnimalsData"
                 />
             </v-flex>
         </v-layout>
@@ -34,32 +49,39 @@
         </v-snackbar>
     </v-container>
 </template>
-
 <script>
-  import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
-  import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
-  import {
-    addNewDiagnosis,
-    addNewSymptom,
-    deleteDiagnosis,
-    deleteSymptom,
-    getAllDiagnoses,
-    getAllSymptoms,
-    updateDiagnosis,
-    updateSymptom,
-  } from '../client/diagnoses-client';
-  import compareById from '../utils/compareUtil';
+  //TODO: придумать где добавлять признаки и животных
+    import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
+    import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
+    import AnimalSettings from '../components/settings/AnimalSettings.vue';
+    import {
+        addNewDiagnosis,
+        addNewSymptom,
+        deleteDiagnosis,
+        deleteSymptom,
+        getAllDiagnoses,
+        getAllSymptoms,
+        updateDiagnosis,
+        updateSymptom,
+    } from '../client/diagnoses-client';
+    import compareById from '../utils/compareUtil';
+    import { getAllAnimals, getAllSigns } from '../client/animals-client';
+    import SignSettings from '../components/settings/signs/SignSettings.vue';
 
-  export default {
+    export default {
         name: 'Settings',
         components: {
+            SignSettings,
             SymptomsSettings,
             DiagnosisSettings,
+            AnimalSettings,
         },
         data() {
             return {
                 symptoms: null,
                 diagnoses: null,
+                animals: null,
+                signs: null,
                 snackbar: false,
                 timeout: 3000,
                 text: '',
@@ -68,9 +90,13 @@
         beforeRouteEnter(to, from, next) {
             const allSymptoms = getAllSymptoms();
             const allDiagnoses = getAllDiagnoses();
+            const allAnimals = getAllAnimals();
+            const allSigns = getAllSigns();
             next(async (vm) => {
                 vm.symptoms = (await allSymptoms).symptoms.sort(compareById);
                 vm.diagnoses = (await allDiagnoses).diagnoses.sort(compareById);
+                vm.animals = (await allAnimals).sort(compareById);
+                vm.signs = (await allSigns).sort(compareById);
             });
         },
         methods: {
@@ -145,6 +171,18 @@
             showErrorSnackBar(message) {
                 this.text = message;
                 this.snackbar = true;
+            },
+            async updateAnimalsData() {
+                this.animals = (await getAllAnimals()).sort(compareById);
+            },
+
+            async updateSignsData() {
+                this.signs = (await getAllSigns()).sort(compareById);
+            },
+
+            updateSignsAndAnimalsData() {
+                this.updateSignsData();
+                this.updateAnimalsData();
             },
 
             async updateSymptomsData() {

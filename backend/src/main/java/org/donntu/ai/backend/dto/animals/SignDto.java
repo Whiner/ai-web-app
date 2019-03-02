@@ -8,11 +8,11 @@ import org.donntu.ai.backend.entity.AnimalSign;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignResponse {
+public class SignDto {
     private long id;
     private String name;
 
-    public static SignResponse of(AnimalSign sign) {
-        return new SignResponse(sign.getId(), sign.getName());
+    public static SignDto of(AnimalSign sign) {
+        return new SignDto(sign.getId(), sign.getName());
     }
 }

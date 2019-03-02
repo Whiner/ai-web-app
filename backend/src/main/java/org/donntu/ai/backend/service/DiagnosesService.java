@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.donntu.ai.backend.utils.RepositoryUtil.deleteFromRepository;
+
 @Service
 public class DiagnosesService {
     private final DiagnosesRepository diagnosesRepository;
@@ -154,13 +156,7 @@ public class DiagnosesService {
     }
 
     public boolean deleteDiagnosis(Long id) {
-        Optional<Diagnosis> byId = diagnosesRepository.findById(id);
-        if (byId.isPresent()) {
-            diagnosesRepository.delete(byId.get());
-            return true;
-        } else {
-            return false;
-        }
+        return deleteFromRepository(diagnosesRepository, id);
     }
 
 

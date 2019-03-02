@@ -33,6 +33,16 @@ public class Animal {
             inverseJoinColumns = {@JoinColumn(name = "sign_id")})
     private Set<AnimalSign> signs = new HashSet<>();
 
+    public Animal(String name, Set<AnimalSign> signs) {
+        this.name = name;
+        this.signs = signs;
+    }
+    public Animal(Long id, String name, Set<AnimalSign> signs) {
+        this.id = id;
+        this.name = name;
+        this.signs = signs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -51,11 +61,6 @@ public class Animal {
     @Override
     public int hashCode() {
         return name != null ? name.hashCode() : 0;
-    }
-
-    public Animal(String name, Set<AnimalSign> signs) {
-        this.name = name;
-        this.signs = signs;
     }
 
     @Override

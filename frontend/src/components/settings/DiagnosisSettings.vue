@@ -50,10 +50,10 @@
 </template>
 
 <script>
-  import ListCard from './ListCard.vue';
+    import ListCard from './ListCard.vue';
 
 
-  export default {
+    export default {
         name: 'DiagnosisSettings',
         components: { ListCard },
         props: {
@@ -126,11 +126,6 @@
 </script>
 
 <style scoped lang="stylus">
-  .py-10px {
-    padding-top 10x
-    padding-bottom 10px
-  }
-
   .no-overflow {
     height: 500px;
     overflow-y: auto;

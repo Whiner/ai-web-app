@@ -2,7 +2,12 @@
     <div>
         <v-card>
             <v-card-title class="pb-0 pt-0">
-                <v-container fluid class="pa-10px pb-0">
+                <v-container
+                        fluid
+                        px-4
+                        pt-4
+                        pb-0
+                >
                     <v-layout row>
                         <font-awesome-icon icon="ambulance" class="fa-lg" />
                         <span class="title font-weight-light ml-3">
@@ -12,49 +17,21 @@
                 </v-container>
             </v-card-title>
             <v-card-text class="py-0">
-                <v-container fluid class="pt-0 pl-2 pr-0">
+                <v-container fluid
+                             pt-0
+                             pl-0
+                             pr-0
+                >
                     <v-layout row mt-2>
                         <v-divider />
                     </v-layout>
                     <v-layout row>
-                        <v-flex>
-                            <v-list class="grey lighten-4">
-                                <v-list-tile
-                                        v-for="item in items"
-                                        :key="item.id"
-                                >
-                                    <v-list-tile-avatar>
-                                        <v-icon size="15">
-                                            star
-                                        </v-icon>
-                                    </v-list-tile-avatar>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>
-                                            <p>{{ item.name }}</p>
-                                        </v-list-tile-title>
-                                    </v-list-tile-content>
-                                    <v-list-tile-action>
-                                        <v-container fluid class="pa-0">
-                                            <v-layout row>
-                                                <v-flex mr-2>
-                                                    <v-btn icon @click="edit(item)">
-                                                        <v-icon color="info">
-                                                            edit
-                                                        </v-icon>
-                                                    </v-btn>
-                                                </v-flex>
-                                                <v-flex ml-2>
-                                                    <v-btn icon>
-                                                        <v-icon color="error" @click="remove(item)">
-                                                            delete
-                                                        </v-icon>
-                                                    </v-btn>
-                                                </v-flex>
-                                            </v-layout>
-                                        </v-container>
-                                    </v-list-tile-action>
-                                </v-list-tile>
-                            </v-list>
+                        <v-flex xs12>
+                            <List
+                                    :items="items"
+                                    @edit="onEdit"
+                                    @remove="onRemove"
+                            />
                             <v-divider />
                         </v-flex>
                     </v-layout>
@@ -64,6 +41,7 @@
                                     v-model="name"
                                     :label="textFieldLabel"
                                     :rules="[rules.required]"
+                                    prepend-icon="build"
                                     clearable
                             />
                         </v-flex>
@@ -110,8 +88,11 @@
 </template>
 
 <script>
+    import List from './List.vue';
+
     export default {
         name: 'ListCard',
+        components: { List },
         props: {
             items: {
                 type: Array,
@@ -143,11 +124,11 @@
             },
         },
         methods: {
-            remove(item) {
+            onRemove(item) {
                 this.dialog = true;
                 this.removingItem = item;
             },
-            edit(item) {
+            onEdit(item) {
                 this.editingItem = item;
                 this.name = item.name;
             },
@@ -180,17 +161,5 @@
 </script>
 
 <style scoped lang="stylus">
-  .py-10px {
-    padding-top 10x
-    padding-bottom 10px
-  }
 
-  .v-list {
-    height: 310px;
-    overflow-y: auto;
-  }
-
-  .list-layout {
-    background-color #b4b4b4
-  }
 </style>

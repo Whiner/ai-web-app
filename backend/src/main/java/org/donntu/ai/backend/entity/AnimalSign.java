@@ -23,7 +23,7 @@ public class AnimalSign {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH},
+            cascade = {CascadeType.REMOVE},
             mappedBy = "signs")
     @JsonIgnore
     private Set<Animal> animals = new HashSet<>();
