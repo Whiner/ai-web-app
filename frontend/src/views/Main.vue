@@ -5,17 +5,45 @@
             <transition name="component-fade" mode="out-in">
                 <router-view />
             </transition>
+            <v-snackbar
+                    v-model="snackbar"
+                    :timeout="timeout"
+                    right
+                    bottom
+            >
+                {{ text }}
+                <v-btn
+                        color="pink"
+                        flat
+                        @click="snackbar = false"
+                >
+                    Закрыть
+                </v-btn>
+            </v-snackbar>
         </v-content>
     </div>
 </template>
 
 <script>
-
     import Sidebar from '../components/Sidebar.vue';
+    import eventBus from '../eventBus';
 
     export default {
         name: 'Main',
         components: { Sidebar },
+        data() {
+            return {
+                text: '',
+                snackbar: false,
+                timeout: 3000,
+            };
+        },
+        created() {
+            eventBus.$on('message', (data) => {
+                this.text = data;
+                this.snackbar = true;
+            });
+        },
     };
 </script>
 

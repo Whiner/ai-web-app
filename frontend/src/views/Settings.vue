@@ -34,24 +34,10 @@
                 />
             </v-flex>
         </v-layout>
-        <v-snackbar
-                v-model="snackbar"
-                :timeout="timeout"
-                right
-                bottom
-        >
-            {{ text }}
-            <v-btn
-                    color="pink"
-                    flat
-                    @click="snackbar = false"
-            >
-                Закрыть
-            </v-btn>
-        </v-snackbar>
     </v-container>
 </template>
 <script>
+    import eventBus from '../eventBus';
     import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
     import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
     import AnimalSettings from '../components/settings/AnimalSettings.vue';
@@ -83,9 +69,6 @@
                 diagnoses: null,
                 animals: null,
                 signs: null,
-                snackbar: false,
-                timeout: 3000,
-                text: '',
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -102,32 +85,17 @@
         },
         methods: {
             async saveDiagnosis(item) {
-                const result = {
-                    code: 0,
-                    message: '',
-                };
+                let response;
                 if (item.id) {
-                    const response = await updateDiagnosis(item);
-                    console.log(response);
-                    result.code = response.code;
-                    result.message = response.message;
+                    response = await updateDiagnosis(item);
                 } else {
-                    const response = await addNewDiagnosis(item);
-                    console.log(response);
-                    result.code = response.code;
-                    result.message = response.message;
+                    response = await addNewDiagnosis(item);
                 }
-                if (result.code === 200) {
-                    this.text = 'Успешно';
-                    this.snackbar = true;
+                if (response.code === 200) {
+                    this.showSuccessSnackBar();
                     this.updateDiagnosesData();
                 } else {
-                    if (result.message) {
-                        this.text = `Ошибка: ${result.message}`;
-                    } else {
-                        this.text = 'Ошибка';
-                    }
-                    this.snackbar = true;
+                    this.showSnackBar(`Ошибка: ${response.message}`);
                 }
             },
             async saveSymptom(item) {
@@ -170,9 +138,9 @@
             },
 
             showSnackBar(message) {
-                this.text = message;
-                this.snackbar = true;
+                eventBus.$emit('message', message);
             },
+
             async updateAnimalsData() {
                 this.animals = (await getAllAnimals()).sort(compareById);
             },
