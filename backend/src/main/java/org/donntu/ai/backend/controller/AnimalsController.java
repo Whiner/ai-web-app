@@ -75,7 +75,7 @@ public class AnimalsController {
     }
 
     @PostMapping("/sign/add")
-    public MessageResponse addSign(@RequestBody String name) {
+    public MessageResponse addSign(@RequestParam String name) {
         try {
             animalService.addSign(name);
             return new MessageResponse("", 200);
@@ -105,13 +105,17 @@ public class AnimalsController {
     }
 
     @PostMapping("/animal/{id}/del")
-    public boolean delAnimal(@PathVariable Long id) {
-        return animalService.deleteAnimal(id);
+    public MessageResponse delAnimal(@PathVariable Long id) {
+        return animalService.deleteAnimal(id) ?
+                new MessageResponse("", 200)
+                : new MessageResponse("Такого животного не существует", 418);
     }
 
     @PostMapping("/sign/{id}/del")
-    public boolean delSign(@PathVariable Long id) {
-        return animalService.deleteSign(id);
+    public MessageResponse delSign(@PathVariable Long id) {
+        return animalService.deleteSign(id) ?
+                new MessageResponse("", 200)
+                : new MessageResponse("Такого признака не существует", 418);
     }
 
 }

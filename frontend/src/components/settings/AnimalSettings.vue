@@ -4,15 +4,24 @@
             <v-card-title class="pb-0 pt-0">
                 <v-container
                         fluid
-                        px-4
-                        pt-4
+                        pt-3
+                        px-0
                         pb-0
                 >
                     <v-layout row>
-                        <font-awesome-icon icon="cat" class="fa-lg" />
-                        <span class="title font-weight-light ml-3">
-                            Список животных
-                        </span>
+                        <v-flex xs1 align-self-center class="text-xs-center">
+                            <font-awesome-icon icon="cat" class="fa-lg" />
+                        </v-flex>
+                        <v-flex xs5 align-self-center>
+                            <span class="title font-weight-light">
+                                Список животных
+                            </span>
+                        </v-flex>
+                        <v-flex offset-xs5 xs1 class="text-xs-right">
+                            <v-btn icon class="my-0" @click="openAddDialog">
+                                <v-icon>add</v-icon>
+                            </v-btn>
+                        </v-flex>
                     </v-layout>
                 </v-container>
             </v-card-title>
@@ -91,6 +100,12 @@
                 this.dialog = false;
                 this.editingAnimal = null;
                 this.$emit('update');
+            },
+            openAddDialog() {
+                this.editingAnimal = {
+                    signs: [],
+                };
+                this.dialog = true;
             },
         },
     };

@@ -9,7 +9,7 @@
                     star
                 </v-icon>
             </v-list-tile-avatar>
-            <v-list-tile-content style="word-wrap: break-word;">
+            <v-list-tile-content>
                 <v-list-tile-title>
                     <p>{{ item.name }}</p>
                 </v-list-tile-title>

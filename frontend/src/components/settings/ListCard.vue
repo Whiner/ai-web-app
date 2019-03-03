@@ -4,7 +4,7 @@
             <v-card-title class="pb-0 pt-0">
                 <v-container
                         fluid
-                        px-4
+                        px-3
                         pt-4
                         pb-0
                 >

@@ -1,6 +1,5 @@
 package org.donntu.ai.backend.utils;
 
-import org.donntu.ai.backend.entity.AnimalSign;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

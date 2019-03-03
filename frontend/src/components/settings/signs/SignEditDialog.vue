@@ -10,7 +10,7 @@
                     <v-flex xs12>
                         <v-text-field
                                 v-model="localName"
-                                label="Новое название"
+                                label="Название"
                                 prepend-icon="build"
                                 :rules="rules"
                         />
@@ -18,7 +18,11 @@
                 </v-layout>
             </v-card-text>
             <v-card-actions class="justify-center">
-                <v-btn color="success" flat @click="accept">
+                <v-btn color="success"
+                       flat
+                       :loading="loading"
+                       @click="accept"
+                >
                     Сохранить
                 </v-btn>
                 <v-btn color="error" flat @click="dismiss">
@@ -39,6 +43,9 @@
             name: {
                 type: String,
                 default: '',
+            },
+            loading: {
+                type: Boolean,
             },
         },
         data() {

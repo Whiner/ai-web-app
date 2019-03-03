@@ -23,12 +23,14 @@
                         :signs="signs"
                         :animals="animals"
                         @update="updateAnimalsData"
+                        @message="showSnackBar"
                 />
             </v-flex>
             <v-flex xs6 pl-3>
                 <SignSettings
                         :signs="signs"
                         @update="updateSignsAndAnimalsData"
+                        @message="showSnackBar"
                 />
             </v-flex>
         </v-layout>
@@ -50,7 +52,6 @@
     </v-container>
 </template>
 <script>
-  //TODO: придумать где добавлять признаки и животных
     import DiagnosisSettings from '../components/settings/DiagnosisSettings.vue';
     import SymptomsSettings from '../components/settings/SymptomsSettings.vue';
     import AnimalSettings from '../components/settings/AnimalSettings.vue';
@@ -141,7 +142,7 @@
                     this.showSuccessSnackBar();
                     this.updateSymptomsData();
                 } else {
-                    this.showErrorSnackBar(`Ошибка: ${result.message}`);
+                    this.showSnackBar(`Ошибка: ${result.message}`);
                 }
             },
             async removeSymptom(id) {
@@ -150,7 +151,7 @@
                     this.showSuccessSnackBar();
                     this.updateSymptomsData();
                 } else {
-                    this.showErrorSnackBar(`Ошибка: ${response.message}`);
+                    this.showSnackBar(`Ошибка: ${response.message}`);
                 }
             },
 
@@ -160,15 +161,15 @@
                     this.showSuccessSnackBar();
                     this.updateDiagnosesData();
                 } else {
-                    this.showErrorSnackBar(`Ошибка: ${response.message}`);
+                    this.showSnackBar(`Ошибка: ${response.message}`);
                 }
             },
 
             showSuccessSnackBar() {
-                this.text = 'Успешно';
-                this.snackbar = true;
+                this.showSnackBar('Успешно');
             },
-            showErrorSnackBar(message) {
+
+            showSnackBar(message) {
                 this.text = message;
                 this.snackbar = true;
             },

@@ -7,20 +7,28 @@
         </v-card-title>
         <v-divider />
         <v-card-text class="py-0 my-3">
-            <v-container fluid py-0 px-3>
-                <v-layout v-for="sign in localSigns"
-                          :key="sign.id"
-                          row
-                          mb-2
-                >
-                    <v-flex>
-                        <v-checkbox
-                                v-model="sign.checked"
-                                :label="sign.name"
-                                color="secondary"
-                                :disabled="!sign.checked && currentChecked.length === 2"
-                                hide-details
-                        />
+            <v-container fluid
+                         py-0
+                         pl-3
+                         pr-0
+            >
+                <v-layout row>
+                    <v-flex class="container fluid pa-0 no-overflow">
+                        <v-layout v-for="sign in localSigns"
+                                  :key="sign.id"
+                                  row
+                                  mb-2
+                        >
+                            <v-flex>
+                                <v-checkbox
+                                        v-model="sign.checked"
+                                        :label="sign.name"
+                                        color="secondary"
+                                        :disabled="!sign.checked && currentChecked.length === 2"
+                                        hide-details
+                                />
+                            </v-flex>
+                        </v-layout>
                     </v-flex>
                 </v-layout>
                 <v-layout row mt-3 ml-1>
@@ -121,7 +129,7 @@
                     }
                 });
 
-                if (this.editingAnimal.name !== '') {
+                if (this.editingAnimal.id) {
                     this.title = 'Изменение животного';
                     this.animalName = this.editingAnimal.name;
                 } else {
@@ -135,21 +143,28 @@
                     this.alertText = 'Необходимо выбрать 2 признака';
                     this.showAlert();
                 } else if (this.animalName.length > 1 && this.currentChecked.length === 2) {
-                    if (this.editingAnimal.id) {
-                        await updateAnimal(
-                            this.editingAnimal.id,
-                            {
+                    try {
+                        this.loading = true;
+                        if (this.editingAnimal.id) {
+                            await updateAnimal(
+                                this.editingAnimal.id,
+                                {
+                                    name: this.animalName,
+                                    signs: this.currentChecked,
+                                },
+                            );
+                        } else {
+                            await addAnimal({
                                 name: this.animalName,
                                 signs: this.currentChecked,
-                            },
-                        );
-                    } else {
-                        await addAnimal({
-                            name: this.animalName,
-                            signs: this.currentChecked,
-                        });
+                            });
+                        }
+                        this.$emit('close');
+                    } catch (e) {
+                        console.log(e);
+                    } finally {
+                        this.loading = false;
                     }
-                    this.$emit('close');
                 }
             },
             dismiss() {
@@ -172,5 +187,9 @@
 
   .theme--light >>> .v-label {
     color var(--secondary-base)
+  }
+  .no-overflow {
+    height: 56vh;
+    overflow-y: auto;
   }
 </style>
