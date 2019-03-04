@@ -1,10 +1,10 @@
 package org.donntu.ai.backend.controller;
 
-import org.donntu.ai.backend.dto.MessageResponse;
 import org.donntu.ai.backend.dto.animals.AddAnimalRequest;
 import org.donntu.ai.backend.dto.animals.AnimalResponse;
 import org.donntu.ai.backend.dto.animals.SignDto;
-import org.donntu.ai.backend.entity.Animal;
+import org.donntu.ai.backend.exception.AlreadyExistException;
+import org.donntu.ai.backend.exception.NotExistException;
 import org.donntu.ai.backend.service.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class AnimalsController {
     }
 
     @GetMapping("/next-question")
-    public SignDto getNextQuestion(@RequestParam(required = false) Boolean lastAnswer) throws Exception {
+    public SignDto getNextQuestion(@RequestParam(required = false) Boolean lastAnswer) {
         return animalService.nextQuestion(lastAnswer);
     }
 
@@ -65,57 +65,33 @@ public class AnimalsController {
     }
 
     @PostMapping("/animal/add")
-    public MessageResponse addAnimal(@RequestBody AddAnimalRequest request) {
-        try {
-            animalService.addAnimal(request.getName(), request.getSigns());
-            return new MessageResponse("", 200);
-        } catch (Exception e) {
-            return new MessageResponse(e.getMessage(), 418);
-        }
+    public void addAnimal(@RequestBody AddAnimalRequest request) throws AlreadyExistException {
+        animalService.addAnimal(request.getName(), request.getSigns());
     }
 
     @PostMapping("/sign/add")
-    public MessageResponse addSign(@RequestParam String name) {
-        try {
-            animalService.addSign(name);
-            return new MessageResponse("", 200);
-        } catch (Exception e) {
-            return new MessageResponse(e.getMessage(), 418);
-        }
+    public void addSign(@RequestParam String name) throws AlreadyExistException {
+        animalService.addSign(name);
     }
 
     @PostMapping("/animal/{id}")
-    public MessageResponse updateAnimal(@PathVariable Long id, @RequestBody AddAnimalRequest request) {
-        try {
-            animalService.updateAnimal(id, request.getName(), request.getSigns());
-            return new MessageResponse("", 200);
-        } catch (Exception e) {
-            return new MessageResponse(e.getMessage(), 418);
-        }
+    public void updateAnimal(@PathVariable Long id, @RequestBody AddAnimalRequest request) throws AlreadyExistException, NotExistException {
+        animalService.updateAnimal(id, request.getName(), request.getSigns());
     }
 
     @PostMapping("/sign/{id}")
-    public MessageResponse updateSign(@PathVariable Long id, String name) {
-        try {
-            animalService.updateSign(id, name);
-            return new MessageResponse("", 200);
-        } catch (Exception e) {
-            return new MessageResponse(e.getMessage(), 418);
-        }
+    public void updateSign(@PathVariable Long id, String name) throws AlreadyExistException, NotExistException {
+        animalService.updateSign(id, name);
     }
 
     @PostMapping("/animal/{id}/del")
-    public MessageResponse delAnimal(@PathVariable Long id) {
-        return animalService.deleteAnimal(id) ?
-                new MessageResponse("", 200)
-                : new MessageResponse("Такого животного не существует", 418);
+    public void delAnimal(@PathVariable Long id) throws NotExistException {
+        animalService.deleteAnimal(id);
     }
 
     @PostMapping("/sign/{id}/del")
-    public MessageResponse delSign(@PathVariable Long id) {
-        return animalService.deleteSign(id) ?
-                new MessageResponse("", 200)
-                : new MessageResponse("Такого признака не существует", 418);
+    public void delSign(@PathVariable Long id) throws NotExistException {
+        animalService.deleteSign(id);
     }
 
 }

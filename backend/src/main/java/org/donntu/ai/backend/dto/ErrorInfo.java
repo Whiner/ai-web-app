@@ -2,12 +2,14 @@ package org.donntu.ai.backend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class MessageResponse {
+public class ErrorInfo implements Serializable {
+    @NonNull
+    private String code;
     private String message;
-    private int code;
 }

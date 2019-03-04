@@ -31,39 +31,33 @@ export async function getAllAnimals() {
 }
 
 export async function addAnimal(animal) {
-    const response = await axios.post(`${URL}/animal/add`, animal);
-    return response.data;
+    await axios.post(`${URL}/animal/add`, animal);
 }
 
 export async function addSign(sign) {
-    const response = await axios.post(`${URL}/sign/add`, null, {
+    await axios.post(`${URL}/sign/add`, null, {
         params: {
             name: sign,
         },
     });
-    return response.data;
 }
 
 export async function updateAnimal(id, animal) {
-    const response = await axios.post(`${URL}/animal/${id}`, animal);
-    return response.data;
+    await axios.post(`${URL}/animal/${id}`, animal);
 }
 
 export async function updateSign(id, sign) {
-    const response = await axios.post(`${URL}/sign/${id}`, null, {
+    await axios.post(`${URL}/sign/${id}`, null, {
         params: {
             name: sign,
         },
     });
-    return response.data;
 }
 
 export async function deleteAnimal(id) {
-    const response = await axios.post(`${URL}/animal/${id}/del`);
-    return response.data;
+    await axios.post(`${URL}/animal/${id}/del`);
 }
 
 export async function deleteSign(id) {
-    const response = await axios.post(`${URL}/sign/${id}/del`);
-    return response.data;
+    await axios.post(`${URL}/sign/${id}/del`);
 }

@@ -1,8 +1,10 @@
 package org.donntu.ai.backend.service;
 
-import org.donntu.ai.backend.dto.diagnoses.DiagnosesListResponse;
 import org.donntu.ai.backend.entity.Diagnosis;
 import org.donntu.ai.backend.entity.Symptom;
+import org.donntu.ai.backend.exception.ActionMakesCollisionsException;
+import org.donntu.ai.backend.exception.AlreadyExistException;
+import org.donntu.ai.backend.exception.NotExistException;
 import org.donntu.ai.backend.repository.DiagnosesRepository;
 import org.donntu.ai.backend.repository.SymptomsRepository;
 import org.donntu.ai.backend.utils.SetsUtils;
@@ -28,7 +30,7 @@ public class DiagnosesService {
         this.symptomsRepository = symptomsRepository;
     }
 
-    public DiagnosesListResponse getDiagnosesBySymptoms(Set<Symptom> symptoms) {
+    public Set<Diagnosis> getDiagnosesBySymptoms(Set<Symptom> symptoms) {
         Set<Diagnosis> responseList = new HashSet<>();
         Set<Diagnosis> diagnoses = getAllDiagnoses();
         diagnoses.forEach(diagnosis -> {
@@ -36,17 +38,11 @@ public class DiagnosesService {
                 responseList.add(diagnosis);
             }
         });
-        return new DiagnosesListResponse(responseList);
+        return responseList;
     }
 
     private boolean isDiagnosisContainsAllSymptoms(Diagnosis diagnosis, Set<Symptom> symptoms) {
         return diagnosis.getSymptoms().containsAll(symptoms);
-        /*for (Symptom symptom : symptoms) {
-            if (!diagnosisSymptoms.contains(symptom)) {
-                return false;
-            }
-        }
-        return true;*/
     }
 
     private boolean isHaveSymptomsInput(Diagnosis source, Diagnosis dest) {
@@ -70,25 +66,24 @@ public class DiagnosesService {
                 .anyMatch(value -> isHaveSymptomsInput(value, diagnosis));
     }
 
-    public boolean addSymptom(String name) {
+    public void addSymptom(String name) throws AlreadyExistException {
         if (!symptomsRepository.findByName(name).isPresent()) {
             symptomsRepository.save(new Symptom(name));
-            return true;
         } else {
-            return false;
+            throw new AlreadyExistException("Симптом с таким именем уже существует");
         }
     }
 
-    public void updateSymptom(Symptom symptom) throws Exception {
+    public void updateSymptom(Symptom symptom) throws NotExistException {
         Optional<Symptom> symptomById = symptomsRepository.findById(symptom.getId());
         if (symptomById.isPresent()) {
             symptomsRepository.save(symptom);
         } else {
-            throw new Exception("Такого симптома не существует");
+            throw new NotExistException("Такого симптома не существует");
         }
     }
 
-    public void deleteSymptom(Long id) throws Exception {
+    public void deleteSymptom(Long id) throws ActionMakesCollisionsException, NotExistException {
         Optional<Symptom> symptomById = symptomsRepository.findById(id);
         if (symptomById.isPresent()) {
             Set<Diagnosis> diagnoses = getAllDiagnoses();
@@ -101,21 +96,21 @@ public class DiagnosesService {
                     });
             for (Diagnosis diagnosis : diagnoses) {
                 if (isAnyDiagnosisHaveSymptomsInput(diagnosis)) {
-                    throw new Exception("Удаление данного симптома приводит к образованию коллизии");
+                    throw new ActionMakesCollisionsException("Удаление данного симптома приводит к образованию коллизии");
                 }
             }
 
             symptomsRepository.delete(symptom);
         } else {
-            throw new Exception("Такого симптома не существует");
+            throw new NotExistException("Такого симптома не существует");
         }
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public void addDiagnosis(Diagnosis diagnosis) throws Exception {
+    public void addDiagnosis(Diagnosis diagnosis) throws ActionMakesCollisionsException {
         if (isAnyDiagnosisHaveSymptomsInput(diagnosis)
                 || diagnosesRepository.findByName(diagnosis.getName()).isPresent()) {
-            throw new Exception("Данный диагноз образует коллизии или уже существует");
+            throw new ActionMakesCollisionsException("Данный диагноз образует коллизии или уже существует");
         } else {
             Set<Symptom> fromBase = new HashSet<>();
             diagnosis.getSymptoms().forEach(symptom -> {
@@ -139,24 +134,26 @@ public class DiagnosesService {
         }
     }
 
-    public void updateDiagnosis(Diagnosis diagnosis) throws Exception {
+    public void updateDiagnosis(Diagnosis diagnosis) throws ActionMakesCollisionsException, NotExistException {
         Optional<Diagnosis> updatingDiagnosis = diagnosesRepository.findById(diagnosis.getId());
         if (updatingDiagnosis.isPresent()) {
             Set<Diagnosis> diagnoses = getAllDiagnoses();
             Set<Diagnosis> listWithoutUpdatingDiagnosis = new HashSet<>(diagnoses);
             listWithoutUpdatingDiagnosis.remove(updatingDiagnosis.get());
             if (isAnyDiagnosisHaveSymptomsInput(diagnosis, listWithoutUpdatingDiagnosis)) {
-                throw new Exception("При таких изменениях этот диагноз образует коллизии");
+                throw new ActionMakesCollisionsException("При таких изменениях этот диагноз образует коллизии");
             } else {
                 diagnosesRepository.save(diagnosis);
             }
         } else {
-            throw new Exception("Такого диагноза не существует");
+            throw new NotExistException("Такого диагноза не существует");
         }
     }
 
-    public boolean deleteDiagnosis(Long id) {
-        return deleteFromRepository(diagnosesRepository, id);
+    public void deleteDiagnosis(Long id) throws NotExistException {
+        if(!deleteFromRepository(diagnosesRepository, id)) {
+            throw new NotExistException("Такого диагноза не существует");
+        }
     }
 
 

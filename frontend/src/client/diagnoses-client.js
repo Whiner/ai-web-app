@@ -13,12 +13,11 @@ export async function getAllDiagnoses() {
 }
 
 export async function addNewSymptom(name) {
-    const response = await axios.post(`${URL}/symptom/add`, null, {
+    await axios.post(`${URL}/symptom/add`, null, {
         params: {
             name,
         },
     });
-    return response.data;
 }
 
 export async function getDiagnosesBySymptoms(symptoms) {
@@ -31,30 +30,25 @@ export async function getDiagnosesBySymptoms(symptoms) {
 }
 
 export async function addNewDiagnosis(item) {
-    const response = await axios.post(`${URL}/add`,
+    await axios.post(`${URL}/add`,
         {
             name: item.name,
             symptoms: item.symptoms,
         });
-    return response.data;
 }
 
 export async function updateDiagnosis(item) {
-    const response = await axios.post(`${URL}/update`, item);
-    return response.data;
+    await axios.post(`${URL}/update`, item);
 }
 
 export async function updateSymptom(item) {
-    const response = await axios.post(`${URL}/symptom/update`, item);
-    return response.data;
+    await axios.post(`${URL}/symptom/update`, item);
 }
 
 export async function deleteDiagnosis(id) {
-    const response = await axios.post(`${URL}/${id}/del`);
-    return response.data;
+    await axios.post(`${URL}/${id}/del`);
 }
 
 export async function deleteSymptom(id) {
-    const response = await axios.post(`${URL}/symptom/${id}/del`);
-    return response.data;
+    await axios.post(`${URL}/symptom/${id}/del`);
 }

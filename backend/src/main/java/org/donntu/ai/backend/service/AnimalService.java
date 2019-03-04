@@ -4,6 +4,9 @@ import org.donntu.ai.backend.dto.animals.AnimalResponse;
 import org.donntu.ai.backend.dto.animals.SignDto;
 import org.donntu.ai.backend.entity.Animal;
 import org.donntu.ai.backend.entity.AnimalSign;
+import org.donntu.ai.backend.exception.AlreadyExistException;
+import org.donntu.ai.backend.exception.AnswerNotFoundException;
+import org.donntu.ai.backend.exception.NotExistException;
 import org.donntu.ai.backend.repository.AnimalSignRepository;
 import org.donntu.ai.backend.repository.AnimalsRepository;
 import org.donntu.ai.backend.utils.SetsUtils;
@@ -36,17 +39,18 @@ public class AnimalService {
         this.signRepository = signRepository;
     }
 
-    public AnimalResponse getAnimalByAcceptedSigns() throws Exception {
+    public AnimalResponse getAnimalByAcceptedSigns() throws AnswerNotFoundException {
         if (acceptedSigns.size() != requiredSignCount) {
             return AnimalResponse.of(acceptedSigns);
         }
         if (possibleAnswers.size() != 1) {
-            throw new Exception("Единый ответ не найден. Количество попадающих под данные признаки больше 1");
+            throw new AnswerNotFoundException("Не удалось определить животное. " +
+                    "По данным признакам найдено " + possibleAnswers.size() + " результатов");
         }
         return AnimalResponse.of(possibleAnswers.stream().findFirst().orElse(null));
     }
 
-    public SignDto nextQuestion(Boolean lastAnswer) throws Exception {
+    public SignDto nextQuestion(Boolean lastAnswer) {
         if (lastSign == null) {
             remainingSigns = new ArrayList<>(getAllSigns());
             possibleAnswers = getAllAnimals();
@@ -59,10 +63,6 @@ public class AnimalService {
                         .filter(animal -> isAnimalContainsAllSign(animal, acceptedSigns))
                         .collect(Collectors.toSet());
                 if (acceptedSigns.size() == requiredSignCount) {
-                    if (possibleAnswers.size() > 1) {
-                        throw new Exception("Не удалось определить животное. " +
-                                "По данным признакам найдено " + possibleAnswers.size() + " результатов");
-                    }
                     return null;
                 }
             } else {
@@ -128,21 +128,21 @@ public class AnimalService {
         return acceptedSigns;
     }
 
-    public void addAnimal(String name, Set<SignDto> signs) throws Exception {
+    public void addAnimal(String name, Set<SignDto> signs) throws AlreadyExistException {
         Set<Animal> allAnimals = getAllAnimals();
         Set<AnimalSign> fromRepository = getSignsFromRepository(signs);
         boolean anyMatch = allAnimals
                 .stream()
                 .anyMatch(a -> a.getSigns().containsAll(fromRepository));
         if (anyMatch) {
-            throw new Exception("Животное с такими признаками уже существует");
+            throw new AlreadyExistException("Животное с такими признаками уже существует");
         } else {
             animalRepository.save(new Animal(name, fromRepository));
         }
     }
 
 
-    public void updateAnimal(Long id, String name, Set<SignDto> signs) throws Exception {
+    public void updateAnimal(Long id, String name, Set<SignDto> signs) throws AlreadyExistException, NotExistException {
         Optional<Animal> animal = animalRepository.findById(id);
         if (animal.isPresent()) {
             Set<Animal> allAnimals = getAllAnimals();
@@ -151,12 +151,12 @@ public class AnimalService {
                     .stream()
                     .anyMatch(a -> a.getSigns().containsAll(fromRepository));
             if (anyMatch && name.equals(animal.get().getName())) {
-                throw new Exception("Животное с такими признаками уже существует");
+                throw new AlreadyExistException("Животное с такими признаками уже существует");
             } else {
                 animalRepository.save(new Animal(id, name, fromRepository));
             }
         } else {
-            throw new Exception("Такого животного нет в базе");
+            throw new NotExistException("Такого животного нет в базе");
         }
     }
 
@@ -168,29 +168,33 @@ public class AnimalService {
         return fromDb;
     }
 
-    public boolean deleteAnimal(Long id) {
-        return deleteFromRepository(animalRepository, id);
+    public void deleteAnimal(Long id) throws NotExistException {
+        if(!deleteFromRepository(animalRepository, id)){
+            throw new NotExistException("Такого животного не существует");
+        }
     }
 
-    public boolean deleteSign(Long id) {
-        return deleteFromRepository(signRepository, id);
+    public void deleteSign(Long id) throws NotExistException {
+        if(!deleteFromRepository(signRepository, id)) {
+            throw new NotExistException("Такого признака не существует");
+        }
     }
 
-    public void addSign(String name) throws Exception {
+    public void addSign(String name) throws AlreadyExistException {
         Optional<AnimalSign> byName = signRepository.findByName(name);
         if (byName.isPresent()) {
-            throw new Exception("Такой признак уже существует");
+            throw new AlreadyExistException("Такой признак уже существует");
         } else {
             signRepository.save(new AnimalSign(name));
         }
     }
 
-    public void updateSign(Long id, String name) throws Exception {
+    public void updateSign(Long id, String name) throws AlreadyExistException, NotExistException {
         Optional<AnimalSign> byId = signRepository.findById(id);
         if (byId.isPresent()) {
             Optional<AnimalSign> byName = signRepository.findByName(name);
             if (byName.isPresent()) {
-                throw new Exception("Признак с таким именем уже существует");
+                throw new AlreadyExistException("Признак с таким именем уже существует");
             } else {
                 byId.ifPresent(sign -> {
                     sign.setName(name);
@@ -198,7 +202,7 @@ public class AnimalService {
                 });
             }
         } else {
-            throw new Exception("Такого признака не существует");
+            throw new NotExistException("Такого признака не существует");
         }
     }
 }
