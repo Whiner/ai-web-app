@@ -33,7 +33,7 @@
     import AnimalForm from '../components/animals/AnimalForm.vue';
     import compareById from '../utils/compareUtil';
     import AnimalAnswer from '../components/animals/AnimalAnswer.vue';
-
+    //TODO: пройтись по всем компонентам и поправить запросы
     export default {
         name: 'Animals',
         components: {
