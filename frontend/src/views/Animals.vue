@@ -27,6 +27,7 @@
 </template>
 
 <script>
+    import eventBus from '../eventBus';
     import SignQuestions from '../components/animals/SignQuestions.vue';
     import { clear, getAllSigns, getAnswer, nextQuestion } from '../client/animals-client';
     import AnimalForm from '../components/animals/AnimalForm.vue';
@@ -83,7 +84,7 @@
                         }
                     }
                 } catch (e) {
-                    console.log(e);
+                    eventBus.$emit('message', e.message);
                 }
             },
             async onRefresh() {
