@@ -47,12 +47,12 @@
         async beforeRouteEnter(to, from, next) {
             const allSymptoms = await getAllSymptoms();
             next((vm) => {
-                vm.symptoms = allSymptoms.symptoms.sort(compareById);
+                vm.symptoms = allSymptoms.sort(compareById);
             });
         },
         methods: {
             async checkDiagnoses(symptoms) {
-                this.diagnoses = (await getDiagnosesBySymptoms(symptoms)).diagnoses;
+                this.diagnoses = await getDiagnosesBySymptoms(symptoms);
             },
         },
     };

@@ -17,7 +17,6 @@ public class AnimalResponse {
     private String name;
 
     private Set<SignDto> signs;
-    //private byte[] image;
 
     public static AnimalResponse of(Animal animal) {
         AnimalResponse response = new AnimalResponse();

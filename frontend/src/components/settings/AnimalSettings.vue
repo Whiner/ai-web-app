@@ -66,6 +66,7 @@
     import AnimalForm from '../animals/AnimalForm.vue';
     import List from './List.vue';
     import { deleteAnimal } from '../../client/animals-client';
+    import eventBus from '../../eventBus';
 
     export default {
         name: 'AnimalSettings',
@@ -92,8 +93,13 @@
                 this.dialog = true;
             },
             async onRemove(item) {
-                await deleteAnimal(item.id);
-                this.$emit('update');
+                try {
+                    await deleteAnimal(item.id);
+                    this.$emit('update');
+                    eventBus.$emit('message', 'Успешно');
+                } catch (e) {
+                    eventBus.$emit('message', `Ошибка: ${e.response.data.message}`);
+                }
             },
 
             onClose() {

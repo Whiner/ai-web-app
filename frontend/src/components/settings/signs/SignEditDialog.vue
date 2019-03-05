@@ -9,10 +9,11 @@
                 <v-layout row justify-center>
                     <v-flex xs12>
                         <v-text-field
-                                v-model="localName"
+                                v-model="name"
                                 label="Название"
                                 prepend-icon="build"
                                 :rules="rules"
+                                autofocus
                         />
                     </v-flex>
                 </v-layout>
@@ -37,20 +38,14 @@
     export default {
         name: 'SignEditDialog',
         props: {
-            show: {
-                type: Boolean,
-            },
-            name: {
-                type: String,
-                default: '',
-            },
             loading: {
                 type: Boolean,
             },
         },
         data() {
             return {
-                localName: '',
+                show: false,
+                name: '',
                 rules: [
                     v => (v && v.length > 0 ? true : 'Поле не должно быть пустым'),
                     v => (v && v.trim().length > 0 ? true : 'Поле не должно состоять только из пробелов'),
@@ -59,15 +54,22 @@
         },
         watch: {
             name(newVal) {
-                this.localName = newVal;
+                this.localName = newVal || '';
             },
         },
         methods: {
+            openDialog(name) {
+                this.name = name;
+                this.show = true;
+            },
+
             accept() {
                 this.$emit('accept', this.localName);
+                this.show = false;
             },
             dismiss() {
                 this.$emit('dismiss');
+                this.show = false;
             },
         },
     };

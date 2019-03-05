@@ -56,14 +56,19 @@
             };
         },
         async beforeRouteEnter(to, from, next) {
-            await clear();
-            const sign = nextQuestion(null);
-            const signs = getAllSigns();
-            next(async (vm) => {
-                vm.sign = await sign;
-                vm.signs = (await signs).sort(compareById);
-                vm.currentShowing = vm.showingVariants.question;
-            });
+            try {
+                await clear();
+                const sign = nextQuestion(null);
+                const signs = getAllSigns();
+                next(async (vm) => {
+                    vm.sign = await sign;
+                    vm.signs = (await signs).sort(compareById);
+                    vm.currentShowing = vm.showingVariants.question;
+                });
+            } catch (e) {
+                next(false);
+                eventBus.$emit('message', e.response.data.message);
+            }
         },
         methods: {
             async onAnswer(result) {
@@ -84,7 +89,7 @@
                         }
                     }
                 } catch (e) {
-                    eventBus.$emit('message', e.message);
+                    eventBus.$emit('message', e.response.data.message);
                 }
             },
             async onRefresh() {

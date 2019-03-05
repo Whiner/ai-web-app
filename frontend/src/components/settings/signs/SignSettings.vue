@@ -47,8 +47,7 @@
                 </v-container>
             </v-card-text>
         </v-card>
-        <SignEditDialog :show="editDialog"
-                        :name="editingSign ? editingSign.name : ''"
+        <SignEditDialog ref="editDialog"
                         @accept="editSign"
                         @dismiss="closeEditDialog"
         />
@@ -78,7 +77,6 @@
         data() {
             return {
                 removeDialog: false,
-                editDialog: false,
                 removingItemId: null,
                 editingSign: null,
                 editingAcceptButtonLoading: false,
@@ -87,7 +85,7 @@
         methods: {
             onEdit(item) {
                 this.editingSign = item;
-                this.editDialog = true;
+                this.$refs.editDialog.openDialog(this.editingSign ? this.editingSign.name : '');
             },
             async onRemove(item) {
                 this.removeDialog = true;
@@ -95,34 +93,33 @@
             },
 
             async removeSign() {
-                this.closeRemoveDialog();
-                const response = await deleteSign(this.removingItemId);
-                if (response && response.code === 200) {
-                    this.closeEditDialog();
+                try {
+                    await deleteSign(this.removingItemId);
+                    this.closeRemoveDialog();
                     this.$emit('message', 'Успешно');
+                } catch (e) {
+                    this.$emit('message', `Ошибка: ${e.response.data.message}`);
+                } finally {
                     this.$emit('update');
-                } else {
-                    this.$emit('message', `Ошибка: ${response.message}`);
                 }
-                this.$emit('update');
             },
 
             async editSign(name) {
-                this.editingAcceptButtonLoading = true;
-                let response;
-                if (this.editingSign) {
-                    response = await updateSign(this.editingSign.id, name);
-                } else {
-                    response = await addSign(name);
-                }
-                if (response && response.code === 200) {
+                try {
+                    this.editingAcceptButtonLoading = true;
+                    if (this.editingSign) {
+                        await updateSign(this.editingSign.id, name);
+                    } else {
+                        await addSign(name);
+                    }
                     this.closeEditDialog();
                     this.$emit('message', 'Успешно');
                     this.$emit('update');
-                } else {
-                    this.$emit('message', `Ошибка: ${response.message}`);
+                } catch (e) {
+                    this.$emit('message', `Ошибка: ${e.response.data.message}`);
+                } finally {
+                    this.editingAcceptButtonLoading = false;
                 }
-                this.editingAcceptButtonLoading = false;
             },
 
             closeRemoveDialog() {
@@ -131,12 +128,11 @@
             },
 
             closeEditDialog() {
-                this.editDialog = false;
                 this.editingSign = null;
             },
 
             openAddDialog() {
-                this.editDialog = true;
+                this.$refs.editDialog.openDialog('');
             },
         },
     };

@@ -72,64 +72,66 @@
             };
         },
         beforeRouteEnter(to, from, next) {
-            const allSymptoms = getAllSymptoms();
-            const allDiagnoses = getAllDiagnoses();
-            const allAnimals = getAllAnimals();
-            const allSigns = getAllSigns();
-            next(async (vm) => {
-                vm.symptoms = (await allSymptoms).symptoms.sort(compareById);
-                vm.diagnoses = (await allDiagnoses).diagnoses.sort(compareById);
-                vm.animals = (await allAnimals).sort(compareById);
-                vm.signs = (await allSigns).sort(compareById);
-            });
+            try {
+                const allSymptoms = getAllSymptoms();
+                const allDiagnoses = getAllDiagnoses();
+                const allAnimals = getAllAnimals();
+                const allSigns = getAllSigns();
+                next(async (vm) => {
+                    vm.symptoms = (await allSymptoms).sort(compareById);
+                    vm.diagnoses = (await allDiagnoses).sort(compareById);
+                    vm.animals = (await allAnimals).sort(compareById);
+                    vm.signs = (await allSigns).sort(compareById);
+                });
+            } catch (e) {
+                next(false);
+                this.showSnackBar(`Ошибка: ${e.response.data.message}`);
+            }
         },
         methods: {
             async saveDiagnosis(item) {
-                let response;
-                if (item.id) {
-                    response = await updateDiagnosis(item);
-                } else {
-                    response = await addNewDiagnosis(item);
-                }
-                if (response.code === 200) {
+                try {
+                    if (item.id) {
+                        await updateDiagnosis(item);
+                    } else {
+                        await addNewDiagnosis(item);
+                    }
                     this.showSuccessSnackBar();
                     this.updateDiagnosesData();
-                } else {
-                    this.showSnackBar(`Ошибка: ${response.message}`);
+                } catch (e) {
+                    this.showSnackBar(`Ошибка: ${e.response.data.message}`);
                 }
             },
             async saveSymptom(item) {
-                let result;
-                if (item.id) {
-                    result = await updateSymptom(item);
-                } else {
-                    result = await addNewSymptom(item.name);
-                }
-
-                if (result === true || result.code === 200) {
+                try {
+                    if (item.id) {
+                        await updateSymptom(item);
+                    } else {
+                        await addNewSymptom(item.name);
+                    }
                     this.showSuccessSnackBar();
                     this.updateSymptomsData();
-                } else {
-                    this.showSnackBar(`Ошибка: ${result.message}`);
+                } catch (e) {
+                    this.showSnackBar(`Ошибка: ${e.response.data.message}`);
                 }
             },
             async removeSymptom(id) {
-                const response = await deleteSymptom(id);
-                if (response.code === 200) {
+                try {
+                    await deleteSymptom(id);
                     this.showSuccessSnackBar();
                     this.updateSymptomsData();
-                } else {
-                    this.showSnackBar(`Ошибка: ${response.message}`);
+                } catch (e) {
+                    this.showSnackBar(`Ошибка: ${e.response.data.message}`);
                 }
             },
 
             async removeDiagnosis(id) {
-                const response = await deleteDiagnosis(id);
-                if (response === true || response.code === 200) {
+                try {
+                    await deleteDiagnosis(id);
                     this.showSuccessSnackBar();
                     this.updateDiagnosesData();
-                } else {
-                    this.showSnackBar(`Ошибка: ${response.message}`);
+                } catch (e) {
+                    this.showSnackBar(`Ошибка: ${e.response.data.message}`);
                 }
             },
 
@@ -155,14 +157,12 @@
             },
 
             async updateSymptomsData() {
-                this.symptoms = (await getAllSymptoms()).symptoms.sort(compareById);
+                this.symptoms = (await getAllSymptoms()).sort(compareById);
             },
 
             async updateDiagnosesData() {
-                this.diagnoses = (await getAllDiagnoses()).diagnoses.sort(compareById);
+                this.diagnoses = (await getAllDiagnoses()).sort(compareById);
             },
-
-
         },
 
     };

@@ -1,13 +1,10 @@
 package org.donntu.ai.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,16 +12,12 @@ import java.util.Set;
 @Table(name = "animals")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.DETACH})

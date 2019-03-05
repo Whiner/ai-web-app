@@ -84,6 +84,7 @@
 
 <script>
     import { addAnimal, updateAnimal } from '../../client/animals-client';
+    import eventBus from '../../eventBus';
 
     export default {
         name: 'AnimalForm',
@@ -159,6 +160,7 @@
                                 signs: this.currentChecked,
                             });
                         }
+                        eventBus.$emit('message', 'Успешно');
                         this.$emit('close');
                     } catch (e) {
                         console.log(e);
