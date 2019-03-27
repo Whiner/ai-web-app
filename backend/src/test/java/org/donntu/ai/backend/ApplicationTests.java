@@ -17,7 +17,7 @@ public class ApplicationTests {
             System.out.println(
                     geneticService.getMaxExtremumX(
                             0,
-                            3,
+                            15,
                             20,
                             10000,
                             0.5,
