@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-layout row>
-            <v-flex xs4>
+            <v-flex xs4 mr-3>
                 <v-card>
                     <v-card-text py-2 px-0>
                         <v-container fluid pa-0>
@@ -102,7 +102,11 @@
                             <v-divider />
                             <v-layout row justify-center mt-3>
                                 <v-flex xs5>
-                                    <v-btn block color="secondary" @click="onSearch">
+                                    <v-btn block
+                                           color="secondary"
+                                           :loading="loading"
+                                           @click="onSearch"
+                                    >
                                         Поиск
                                     </v-btn>
                                 </v-flex>
@@ -111,8 +115,12 @@
                     </v-card-text>
                 </v-card>
             </v-flex>
-            <v-flex>
-                <FunctionChart :lower-interval="0" :upper-interval="15" :extremum-x="5" />
+            <v-flex ml-3>
+                <FunctionChart v-if="x"
+                               :lower-interval="value[0]"
+                               :upper-interval="value[1]"
+                               :extremum-x="x"
+                />
             </v-flex>
         </v-layout>
     </v-container>
@@ -132,11 +140,14 @@
                 maxIterationsCount: 10000,
                 crossingChance: 0.5,
                 mutationChance: 0.5,
+                x: null,
+                loading: false,
             };
         },
         methods: {
             async onSearch() {
-                const x = await getExtremum(
+                this.loading = true;
+                this.x = await getExtremum(
                     this.value[0],
                     this.value[1],
                     this.chromosomesCount,
@@ -144,7 +155,7 @@
                     this.mutationChance,
                     this.crossingChance,
                 );
-                console.log(`x = ${x}`);
+                this.loading = false;
             },
         },
     };
