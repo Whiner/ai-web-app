@@ -13,8 +13,7 @@ public class FitnessFunctionImpl implements FitnessFunction {
     @Override
     public double getFunctionValue(StringBuffer chromosome) {
         double x = NumericUtil.binaryStringToDouble(chromosome);
-        double v = Math.pow(x, 3) - 4 * Math.pow(x, 2) + 7.0;
-//        System.out.println("f(" + x + ") = " + v);
-        return v;
+        //return 2 * Math.pow(x, 3) - 12 * Math.pow(x, 2) + 18 * x + 3;
+        return Math.pow(x, 3) - 4 * Math.pow(x, 2) + 7.0;
     }
 }

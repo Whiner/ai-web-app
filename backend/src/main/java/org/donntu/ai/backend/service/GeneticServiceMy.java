@@ -22,53 +22,25 @@ public class GeneticServiceMy {
     private double rightAnswer = 2482; //f(15)
     private double eps = 100;
 
-    public Double getMaxFunctionValueOnInterval(
+    public Chromosome getMaxFunctionValueOnInterval(
             double lowerInterval,
             double upperInterval,
             int chromosomeCount,
             int maxIterationsCount,
-            double mutationChance) throws Exception {
+            double mutationChance, double crossingChance) {
         List<Chromosome> genome = generateGenome(lowerInterval, upperInterval, chromosomeCount);
-        List<Chromosome> newGenome = new ArrayList<>();
         int currentIteration = 0;
 
-        double lastMax = -1000000.0;
-        String lastChromosome = "";
-
-        while (currentIteration <= maxIterationsCount && lastMax != rightAnswer) {
+        Chromosome bestChromosome = new Chromosome(-1000000.0);
+        while (currentIteration <= maxIterationsCount && bestChromosome.getDecimal() != rightAnswer) {
             currentIteration++;
 
             reproduction(genome);
 
-            int size = genome.stream().mapToInt(Chromosome::getCopiesCount).sum();
-            while (size > 0) {
-                Chromosome chromosome1 = getRandomChromosome(genome);
-                size--;
-                if (chromosome1 != null) {
-                    Chromosome chromosome2 = getRandomChromosome(genome);
-                    size--;
-                    if (chromosome2 == null) {
-                        newGenome.add(chromosome1);
-                    } else {
-                        newGenome.add(
-                                validateChromosome(
-                                        lowerInterval,
-                                        upperInterval,
-                                        crossing(
-                                                chromosome1.getBinary().toString(),
-                                                chromosome2.getBinary().toString(),
-                                                random.nextInt(chromosome1.getBinary().length() - 1)
-                                        ))
-                        );
-                    }
-                } else {
-                    throw new Exception("Что то пошло не так");
+            genome.forEach(chromosome -> {
+                if (random.nextDouble() <= crossingChance) {
+                    crossing(chromosome, genome);
                 }
-            }
-            genome.addAll(newGenome);
-            newGenome.clear();
-
-            for (Chromosome chromosome : genome) {
                 StringBuffer binary = chromosome.getBinary();
                 if (random.nextDouble() <= mutationChance) {
                     String mutated = validateChromosome(
@@ -81,16 +53,39 @@ public class GeneticServiceMy {
                 }
 
                 double functionValue = fitnessFunction.getFunctionValue(binary);
-                if (functionValue > lastMax) {
-                    lastMax = functionValue;
-//                    lastChromosome = binary.toString();
-                    System.out.println("f(" + binaryStringToDouble(binary) + ") = " + lastMax);
+                if (functionValue > bestChromosome.getFunctionValue()) {
+                    bestChromosome.setBinary(binary);
+                    bestChromosome.setFunctionValue(functionValue);
                 }
-            }
+            });
 
-            genome.addAll(generateGenome(lowerInterval, upperInterval, chromosomeCount - genome.size()));
+//            genome.addAll(generateGenome(lowerInterval, upperInterval, chromosomeCount - genome.size()));
         }
-        return 0.0;
+        return bestChromosome;
+    }
+
+    private void crossing(Chromosome chromosome, List<Chromosome> genome) {
+        Chromosome crossingPair = getCrossingPair(chromosome, genome);
+        if (crossingPair != null) {
+            chromosome.of(
+                    crossing(
+                            chromosome.getBinary().toString(),
+                            crossingPair.getBinary().toString(),
+                            random.nextInt(chromosome.getBinary().length() - 1)
+                    ));
+        }
+    }
+
+    private Chromosome getCrossingPair(Chromosome chromosome, List<Chromosome> genome) {
+        if (!genome.stream().allMatch(chromosome::equals)) {
+            Chromosome pair;
+            do {
+                pair = genome.get(random.nextInt(genome.size()));
+            } while (pair.equals(chromosome));
+            return pair;
+        } else {
+            return null;
+        }
     }
 
     private StringBuffer mutation(StringBuffer chromosome) {
@@ -177,18 +172,17 @@ public class GeneticServiceMy {
                 })
                 .sum();
 
-        List<Chromosome> onRemoving = new ArrayList<>();
+        List<Chromosome> newGenome = new ArrayList<>();
 
         genome.forEach(chromosome -> {
-            Long round = Math.round((chromosome.getFunctionValue() / functionValuesSum) * populationPower);
-            if(round > 0) {
-                chromosome.setCopiesCount(round.intValue());
-            } else {
-                onRemoving.add(chromosome);
+            long count = Math.round((chromosome.getFunctionValue() / functionValuesSum) * populationPower);
+            for (int i = 0; i < count; i++) {
+                newGenome.add(chromosome);
             }
         });
 
-        onRemoving.forEach(genome::remove);
+        genome.clear();
+        genome.addAll(newGenome);
     }
 
     /**

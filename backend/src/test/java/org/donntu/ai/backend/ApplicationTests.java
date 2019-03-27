@@ -13,17 +13,15 @@ public class ApplicationTests {
 
     @Test
     public void geneticTest() {
-        try {
-            geneticServiceMy.getMaxFunctionValueOnInterval(
-                    0,
-                    15,
-                    4,
-                    100,
-                    0.0001);
+        System.out.println(
+                geneticServiceMy.getMaxFunctionValueOnInterval(
+                        0,
+                        15,
+                        4,
+                        100,
+                        0.0001, 0.5)
+        );
 //            geneticServiceMy.crossing(new StringBuffer("11111"), new StringBuffer("00000"), 2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }
