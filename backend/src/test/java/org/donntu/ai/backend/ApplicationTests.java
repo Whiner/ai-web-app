@@ -2,6 +2,7 @@ package org.donntu.ai.backend;
 
 import org.donntu.ai.backend.component.genetic.FitnessFunctionImpl;
 import org.donntu.ai.backend.service.GeneticServiceMy;
+import org.donntu.ai.backend.utils.NumericUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -13,15 +14,15 @@ public class ApplicationTests {
 
     @Test
     public void geneticTest() {
-        System.out.println(
+        /*System.out.println(
                 geneticServiceMy.getMaxFunctionValueOnInterval(
                         0,
                         15,
                         4,
                         100,
                         0.0001, 0.5)
-        );
-//            geneticServiceMy.crossing(new StringBuffer("11111"), new StringBuffer("00000"), 2);
+        );*/
+        Double aDouble = NumericUtil.binaryStringToDouble("111111111111110", 0, 15);
     }
 
 }

@@ -19,8 +19,11 @@ public class GeneticServiceMy {
     private final FitnessFunction fitnessFunction;
 
     private ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    private final int INTERVALS_COUNT = 1000;
+
     private double rightAnswer = 2482; //f(15)
-    private double eps = 100;
+    private double eps = 0.001;
 
     public Chromosome getMaxFunctionValueOnInterval(
             double lowerInterval,
@@ -101,7 +104,7 @@ public class GeneticServiceMy {
 
 
     private Chromosome validateChromosome(double lowerInterval, double upperInterval, StringBuffer chromosome) {
-        double value = binaryStringToDouble(chromosome);
+        double value = binaryStringToDouble(chromosome.toString(), 0, 0);
         if (value < lowerInterval) {
             return new Chromosome(lowerInterval);
         } else if (value > upperInterval) {

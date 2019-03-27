@@ -30,7 +30,7 @@ public class Chromosome {
     }
 
     public void setBinary(StringBuffer binary) {
-        this.decimal = NumericUtil.binaryStringToDouble(binary);
+        this.decimal = NumericUtil.binaryStringToDouble(binary.toString(), 0, 0);
         this.binary = binary.toString();
     }
 
@@ -39,7 +39,7 @@ public class Chromosome {
     }
 
     public void updateDecimal() {
-        this.decimal = NumericUtil.binaryStringToDouble(getBinary());
+        this.decimal = NumericUtil.binaryStringToDouble(getBinary().toString(), 0, 0);
     }
 
     public StringBuffer getBinary() {
