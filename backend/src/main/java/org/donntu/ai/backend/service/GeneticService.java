@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static java.lang.Math.abs;
 import static org.donntu.ai.backend.utils.NumericUtil.binaryStringToDouble;
 import static org.donntu.ai.backend.utils.NumericUtil.getNearestMaxTwoPower;
 
@@ -24,6 +22,8 @@ public class GeneticService {
     private ThreadLocalRandom random = ThreadLocalRandom.current();
 
     private final int INTERVALS_COUNT = 1000;
+    private final int MAX_CHROMOSOMES_COUNT = 300;
+    private final int MIN_CHROMOSOMES_COUNT = 3;
 
     private double rightAnswer = 2482; //f(15)
     private double eps = 0.001;
@@ -34,25 +34,32 @@ public class GeneticService {
             int chromosomeCount,
             int maxIterationsCount,
             double mutationChance,
-            double crossingChance) {
+            double crossingChance) throws Exception {
 
         final int bitsCount = getNearestMaxTwoPower((int) (INTERVALS_COUNT * (upperInterval - lowerInterval)));
 
         List<Chromosome> genome = generateGenome(bitsCount, chromosomeCount);
         int currentIteration = 0;
 
-        AtomicReference<String> bestChromosome = new AtomicReference<>();
-        AtomicReference<Double> maxFunctionValue = new AtomicReference<>(-Double.MAX_VALUE);
+        String bestChromosome = "";
+        double maxFunctionValue = -Double.MAX_VALUE;
 
         genome.forEach(chromosome -> chromosome.updateDecimal(lowerInterval, upperInterval));
 
-        while (currentIteration <= maxIterationsCount && abs(rightAnswer - maxFunctionValue.get()) > eps) {
+        while (currentIteration <= maxIterationsCount) {
             reproduction(genome, lowerInterval, upperInterval);
 
-            genome.forEach(chromosome -> {
+            if(genome.size() < MIN_CHROMOSOMES_COUNT) {
+                throw new Exception("Хромосомы вымерли");
+            } else if(genome.size() > MAX_CHROMOSOMES_COUNT) {
+                throw new Exception("Максимальное количество хромосом превышено");
+            }
+
+            for (Chromosome chromosome : genome) {
                 if (random.nextDouble() <= crossingChance) {
                     crossing(chromosome, genome);
                 }
+
                 String binary = chromosome.getBinary();
                 if (random.nextDouble() <= mutationChance) {
                     chromosome.setBinary(mutation(binary));
@@ -65,15 +72,16 @@ public class GeneticService {
                 chromosome.setDecimal(decimal);
                 chromosome.setFunctionValue(functionValue);
 
-                if (functionValue > maxFunctionValue.get()) {
-                    bestChromosome.set(binary);
-                    maxFunctionValue.set(functionValue);
+                if (functionValue > maxFunctionValue) {
+                    bestChromosome = binary;
+                    maxFunctionValue = functionValue;
                 }
-            });
+            }
             genome.addAll(generateGenome(bitsCount, chromosomeCount - genome.size()));
             currentIteration++;
+
         }
-        return binaryStringToDouble(bestChromosome.get(), lowerInterval, upperInterval);
+        return binaryStringToDouble(bestChromosome, lowerInterval, upperInterval);
     }
 
     private void crossing(Chromosome chromosome, List<Chromosome> genome) {
@@ -83,7 +91,6 @@ public class GeneticService {
                     crossing(
                             chromosome.getBinary(),
                             crossingPair.getBinary(),
-                            //random.nextInt(0, chromosome.getBinary().length() - 1)
                             generateChromosome(chromosome.getBinary().length())
                     )
             );
@@ -160,7 +167,6 @@ public class GeneticService {
 
         genome.forEach(chromosome -> {
             long count = Math.round((chromosome.getFunctionValue() / functionValuesSum) * populationPower);
-
             for (int i = 0; i < count; i++) {
                 newGenome.add(chromosome.copy());
             }
@@ -169,18 +175,6 @@ public class GeneticService {
 
         genome.clear();
         genome.addAll(newGenome);
-    }
-
-    /**
-     * скрещивает заданные хромосомы в заданной точке кроссинговера
-     *
-     * @param chromosome1   первая хромосома
-     * @param chromosome2   вторая хромосома
-     * @param crossingIndex индекс кроссинговера
-     * @return скрещенную хромосому
-     */
-    private String crossing(String chromosome1, String chromosome2, int crossingIndex) {
-        return chromosome1.substring(0, crossingIndex) + chromosome2.substring(crossingIndex);
     }
 
     private String crossing(String chromosome1, String chromosome2, String model) {

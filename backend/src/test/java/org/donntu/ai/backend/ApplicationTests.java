@@ -13,15 +13,19 @@ public class ApplicationTests {
 
     @Test
     public void geneticTest() {
-        System.out.println(
-                geneticService.getMaxExtremumX(
-                        0,
-                        15,
-                        15,
-                        10000,
-                        0.5,
-                        0.5)
-        );
+        try {
+            System.out.println(
+                    geneticService.getMaxExtremumX(
+                            0,
+                            3,
+                            20,
+                            10000,
+                            0.5,
+                            0.5)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // aDouble = NumericUtil.binaryStringToDouble("111111111111110", 0, 15);
     }
 
