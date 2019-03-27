@@ -9,41 +9,26 @@ import org.donntu.ai.backend.utils.NumericUtil;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Chromosome {
-    private String binary;
-    private double decimal;
+    private String binary = null;
+    private Double decimal = null;
+    private Double functionValue;
 
-    private double functionValue;
     private int copiesCount;
 
-    public Chromosome(StringBuffer binary) {
-        binary.trimToSize();
-        setBinary(binary);
-    }
-
-    public Chromosome(double decimal) {
-        setDecimal(decimal);
-    }
-
-    public void setDecimal(double decimal) {
-        this.binary = NumericUtil.doubleToBinaryString(decimal).toString();
-        this.decimal = decimal;
-    }
-
-    public void setBinary(StringBuffer binary) {
-        this.decimal = NumericUtil.binaryStringToDouble(binary.toString(), 0, 0);
-        this.binary = binary.toString();
+    public Chromosome(String binary) {
+        this.binary = binary;
     }
 
     public void decrementCopiesCount() {
         copiesCount--;
     }
 
-    public void updateDecimal() {
-        this.decimal = NumericUtil.binaryStringToDouble(getBinary().toString(), 0, 0);
+    public void updateDecimal(double lowerInterval, double upperInterval) {
+        this.decimal = NumericUtil.binaryStringToDouble(getBinary(), lowerInterval, upperInterval);
     }
 
-    public StringBuffer getBinary() {
-        return new StringBuffer(binary);
+    public String getBinary() {
+        return binary;
     }
 
     @Override
@@ -61,7 +46,13 @@ public class Chromosome {
         return binary.hashCode();
     }
 
-    public void of(StringBuffer crossing) {
-        setBinary(crossing);
+    public void of(String crossing) {
+        this.binary = crossing;
+        this.decimal = null;
+        this.functionValue = null;
+    }
+
+    public Chromosome copy() {
+        return new Chromosome(binary, decimal, functionValue, copiesCount);
     }
 }
