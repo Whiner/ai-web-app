@@ -5,7 +5,7 @@ import Main from '../views/Main.vue';
 import App from '../App.vue';
 import Settings from '../views/Settings.vue';
 import Animals from '../views/Animals.vue';
-import InDevelopmentPage from '../views/InDevelopmentPage.vue';
+import Genetic from '../views/Genetic.vue';
 
 Vue.use(Router);
 
@@ -30,7 +30,7 @@ export default new Router({
             {
                 path: '/extremum',
                 name: 'extremum',
-                component: InDevelopmentPage,
+                component: Genetic,
             },
             {
                 path: '/settings',
