@@ -1,6 +1,5 @@
 package org.donntu.ai.backend.service;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.donntu.ai.backend.component.genetic.Chromosome;
 import org.donntu.ai.backend.component.genetic.FitnessFunction;
@@ -14,19 +13,18 @@ import static org.donntu.ai.backend.utils.NumericUtil.binaryStringToDouble;
 import static org.donntu.ai.backend.utils.NumericUtil.getNearestMaxTwoPower;
 
 @Service
-@Data
 @RequiredArgsConstructor
 public class GeneticService {
     private final FitnessFunction fitnessFunction;
 
-    private ThreadLocalRandom random = ThreadLocalRandom.current();
+    private static final ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    private final int INTERVALS_COUNT = 1000;
-    private final int MAX_CHROMOSOMES_COUNT = 300;
-    private final int MIN_CHROMOSOMES_COUNT = 3;
+    private static final int INTERVALS_COUNT = 1000;
+    private static final int MAX_CHROMOSOMES_COUNT = 300;
+    private static final int MIN_CHROMOSOMES_COUNT = 3;
 
-    private double rightAnswer = 2482; //f(15)
-    private double eps = 0.001;
+    /*private double rightAnswer = 2482; //f(15)
+    private double eps = 0.001;*/
 
     public Double getMaxExtremumX(
             double lowerInterval,

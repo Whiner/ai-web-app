@@ -12,21 +12,16 @@ public class ApplicationTests {
     private GeneticService geneticService = new GeneticService(new FitnessFunctionImpl());
 
     @Test
-    public void geneticTest() {
-        try {
-            System.out.println(
-                    geneticService.getMaxExtremumX(
-                            0,
-                            15,
-                            20,
-                            10000,
-                            0.5,
-                            0.5)
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // aDouble = NumericUtil.binaryStringToDouble("111111111111110", 0, 15);
+    public void geneticTest() throws Exception {
+        Double maxExtremumX = geneticService.getMaxExtremumX(
+                    0,
+                    15,
+                    20,
+                    10000,
+                    0.5,
+                    0.5);
+
+        assert maxExtremumX == 2482;
     }
 
 }
