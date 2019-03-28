@@ -9,11 +9,13 @@
                 </v-card>
             </v-flex>
             <v-flex ml-3>
-                <FunctionChart v-if="x"
-                               :lower-interval="lower"
-                               :upper-interval="upper"
-                               :extremum-x="x"
-                />
+                <transition name="component-fade" mode="out-in">
+                    <FunctionChart v-if="x"
+                                   :lower-interval="lower"
+                                   :upper-interval="upper"
+                                   :extremum-x="x"
+                    />
+                </transition>
             </v-flex>
         </v-layout>
     </v-container>
@@ -22,7 +24,6 @@
 <script>
     import FunctionChart from '../components/charts/FunctionChart.vue';
     import GeneticForm from '../components/genetic/GeneticForm.vue';
-    //TODO: обработка ошибок и проверка корректности введенных значений
 
     export default {
         name: 'Genetic',
@@ -43,3 +44,12 @@
         },
     };
 </script>
+
+<style lang="stylus" scoped>
+    .component-fade-enter-active, .component-fade-leave-active {
+        transition: opacity .5s ease;
+    }
+    .component-fade-enter, .component-fade-leave-to {
+        opacity: 0;
+    }
+</style>
