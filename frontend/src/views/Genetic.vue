@@ -129,6 +129,7 @@
 <script>
     import { getExtremum } from '../client/genetic-client';
     import FunctionChart from '../components/charts/FunctionChart.vue';
+    import eventBus from '../eventBus';
 
     export default {
         name: 'Genetic',
@@ -146,16 +147,21 @@
         },
         methods: {
             async onSearch() {
-                this.loading = true;
-                this.x = await getExtremum(
-                    this.value[0],
-                    this.value[1],
-                    this.chromosomesCount,
-                    this.maxIterationsCount,
-                    this.mutationChance,
-                    this.crossingChance,
-                );
-                this.loading = false;
+                try {
+                    this.loading = true;
+                    this.x = await getExtremum(
+                        this.value[0],
+                        this.value[1],
+                        this.chromosomesCount,
+                        this.maxIterationsCount,
+                        this.mutationChance,
+                        this.crossingChance,
+                    );
+                } catch (e) {
+                    eventBus.$emit('message', `Ошибка: ${e.response.data.message}`);
+                } finally {
+                    this.loading = false;
+                }
             },
         },
     };
