@@ -20,9 +20,11 @@
             <v-flex xs6 mr-3>
                 <SymptomsChoice :symptoms="symptoms" @check="checkDiagnoses" />
             </v-flex>
-            <v-flex v-if="diagnoses" xs6 ml-3>
-                <DiagnosisResult :diagnoses="diagnoses" :confidence="confidence" />
-            </v-flex>
+            <transition name="component-fade" mode="out-in">
+                <v-flex v-if="diagnoses" xs6 ml-3>
+                    <DiagnosisResult :diagnoses="diagnoses" :confidence="confidence" />
+                </v-flex>
+            </transition>
         </v-layout>
     </v-container>
 </template>
@@ -63,5 +65,11 @@
 <style scoped lang="stylus">
   .theme--light >>> .v-label {
     color var(--secondary-base)
+  }
+  .component-fade-enter-active, .component-fade-leave-active {
+      transition: opacity .5s ease;
+  }
+  .component-fade-enter, .component-fade-leave-to {
+      opacity: 0;
   }
 </style>
