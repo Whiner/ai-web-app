@@ -5,7 +5,7 @@
                 x<sup>3</sup> - 4x<sup>2</sup> + 7
             </p>
             <p class="mb-0 ml-5">
-                MAX [ {{ extremumX.toFixed(2) }}, {{ fitnessFunction(extremumX).toFixed(2) }} ]
+                Точка экстремума ( {{ extremumX.toFixed(2) }} ; {{ fitnessFunction(extremumX).toFixed(2) }} )
             </p>
         </v-card-title>
         <v-divider />
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+    import _ from 'lodash';
     import LineChart from './LineChart.vue';
 
     export default {
@@ -66,12 +67,18 @@
                     this.initChart();
                 },
             },
+            upperInterval() {
+                this.initChart();
+            },
+            lowerInterval() {
+                this.initChart();
+            },
         },
         methods: {
             fitnessFunction(x) {
                 return (x ** 3) - 4 * (x ** 2) + 7.0;
             },
-            initChart() {
+            initChart: _.debounce(function init() {
                 const step = (this.upperInterval - this.lowerInterval) / 50;
                 const data = [];
                 const labels = [];
@@ -97,7 +104,7 @@
                         },
                     ],
                 };
-            },
+            }, 100),
         },
     };
 </script>
