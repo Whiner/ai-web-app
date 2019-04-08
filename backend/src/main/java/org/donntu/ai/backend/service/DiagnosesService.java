@@ -45,7 +45,7 @@ public class DiagnosesService {
     public Set<DiagnosisResponse> getDiagnosesBySymptoms(Set<Symptom> symptoms) {
         Set<Diagnosis> diagnoses = getAllDiagnoses();
         return diagnoses.stream()
-                .filter(diagnosis -> isDiagnosisContainsAllSymptoms(diagnosis, symptoms))
+                .filter(diagnosis -> isDiagnosisContainsOnlyThisSymptoms(diagnosis, symptoms))
                 .map(DiagnosisResponse::of)
                 .collect(Collectors.toSet());
     }
@@ -96,6 +96,10 @@ public class DiagnosesService {
 
     private boolean isDiagnosisContainsAllSymptoms(Diagnosis diagnosis, Set<Symptom> symptoms) {
         return diagnosis.getSymptoms().containsAll(symptoms);
+    }
+
+    private boolean isDiagnosisContainsOnlyThisSymptoms(Diagnosis diagnosis, Set<Symptom> symptoms) {
+        return isDiagnosisContainsAllSymptoms(diagnosis, symptoms) && diagnosis.getSymptoms().size() == symptoms.size();
     }
 
     private boolean isHaveSymptomsInput(Diagnosis source, Diagnosis dest) {

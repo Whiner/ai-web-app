@@ -215,7 +215,8 @@
             },
             fillCheckedField(array) {
                 array.forEach((value) => {
-                    this.$set(value, 'checked', false);
+                    console.log(value);
+                    this.$set(value, 'checked', value.checked);
                     this.$set(value, 'confidence', 0.5);
                     this.$set(value, 'mistrust', 0.25);
                 });
@@ -226,23 +227,23 @@
 </script>
 
 <style scoped lang="stylus">
-  .no-overflow {
-    max-height 55vh
-    min-height 20vh
-    overflow-y auto
-  }
+    .no-overflow {
+        max-height 55vh
+        min-height 20vh
+        overflow-y auto
+    }
 
-  .inactive-item {
-    transition 0.1s
-    color #9f9f9f
-  }
+    .inactive-item {
+        transition 0.1s
+        color #9f9f9f
+    }
 
-  .active-item {
-    transition 0.1s
-    color var(--secondary-base)
-  }
+    .active-item {
+        transition 0.1s
+        color var(--secondary-base)
+    }
 
-  .theme--light >>> .v-label {
-    color var(--secondary-base)
-  }
+    .theme--light >>> .v-label {
+        color var(--secondary-base)
+    }
 </style>
