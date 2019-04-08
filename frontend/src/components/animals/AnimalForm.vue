@@ -143,7 +143,7 @@
                 if (this.currentChecked.length !== 2) {
                     this.alertText = 'Необходимо выбрать 2 признака';
                     this.showAlert();
-                } else if (this.animalName.length > 1 && this.currentChecked.length === 2) {
+                } else if (this.animalName.length > 0 && this.currentChecked.length === 2) {
                     try {
                         this.loading = true;
                         if (this.editingAnimal.id) {
