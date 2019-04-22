@@ -10,7 +10,7 @@
             </v-flex>
             <v-flex ml-3>
                 <transition name="component-fade" mode="out-in">
-                    <FunctionChart v-if="x"
+                    <FunctionChart v-if="x != null"
                                    :lower-interval="lower"
                                    :upper-interval="upper"
                                    :extremum-x="x"
